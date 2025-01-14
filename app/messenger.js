@@ -198,8 +198,10 @@ function handleRequestMessage(data) {
         console.info("handleRequestMessage: API_TOKEN=" + (0, app_info_1.getApiToken)());
         (0, app_util_1.createLinkStyle)((0, app_info_1.getBaseCss)());
     }
-    if (messagingCallback && data.archetype == "willsofts")
-        messagingCallback(data);
+    if (messagingCallback && data.archetype == "willsofts") {
+        (0, app_info_1.loadAppConfig)(() => { if (messagingCallback)
+            messagingCallback(data); });
+    }
 }
 exports.handleRequestMessage = handleRequestMessage;
 function setupDiffie(json) {
