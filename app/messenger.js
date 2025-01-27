@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bindingParentMessaging = exports.bindingChildMessaging = exports.getDH = exports.setupDiffie = exports.handleRequestMessage = exports.sendMessageToOpener = exports.sendMessageToParent = exports.requestAccessorInfo = exports.sendMessageToFrame = exports.sendMessageInterface = exports.removeAccessorInfo = exports.saveAccessorInfo = exports.getAccessorToken = exports.getAccessorInfo = exports.removeStorage = exports.setStorage = exports.getStorage = exports.getCurrentWindow = exports.setCurrentWindow = exports.setMessagingCallback = exports.getSecureEngine = void 0;
+exports.bindingParentMessaging = exports.bindingChildMessaging = exports.getDH = exports.setupDiffie = exports.handleRequestMessage = exports.sendMessageToOpener = exports.sendMessageToParent = exports.requestAccessorInfo = exports.sendMessageToFrame = exports.sendMessageInterface = exports.removeAccessorInfo = exports.saveAccessorInfo = exports.getAccessTokenKey = exports.getAccessorToken = exports.getAccessorInfo = exports.removeStorage = exports.setStorage = exports.getStorage = exports.getCurrentWindow = exports.setCurrentWindow = exports.setMessagingCallback = exports.getSecureEngine = void 0;
 const app_info_1 = require("./app.info");
 const app_util_1 = require("./app.util");
 const dh_1 = require("./dh");
@@ -88,6 +88,17 @@ function getAccessorToken() {
     return "";
 }
 exports.getAccessorToken = getAccessorToken;
+function getAccessTokenKey() {
+    let json = getAccessorInfo();
+    if (json && json.tokenkey) {
+        return json.tokenkey;
+    }
+    let token = (0, app_info_1.getTokenKey)();
+    if (token && token != "")
+        return token;
+    return "";
+}
+exports.getAccessTokenKey = getAccessTokenKey;
 function saveAccessorInfo(json) {
     setStorage("accessorinfo", JSON.stringify(json));
 }
@@ -100,7 +111,7 @@ function sendMessageInterface(win) {
     let moderator = win ? "opener" : "parent";
     let info = getAccessorInfo();
     let options = getStorage("accessoptions");
-    let msg = { type: "storage", archetype: "willsofts", moderator: moderator, API_URL: (0, app_info_1.getApiUrl)(), BASE_URL: (0, app_info_1.getBaseUrl)(), CDN_URL: (0, app_info_1.getCdnUrl)(), IMG_URL: (0, app_info_1.getImgUrl)(), DEFAULT_LANGUAGE: (0, app_info_1.getDefaultLanguage)(), API_TOKEN: (0, app_info_1.getApiToken)(), BASE_STORAGE: (0, app_info_1.getBaseStorage)(), SECURE_STORAGE: (0, app_info_1.isSecureStorage)(), BASE_CSS: (0, app_info_1.getBaseCss)(), CHAT_URL: (0, app_info_1.getChatUrl)(), MULTI_LANGUAGES: (0, app_info_1.getMultiLanguages)(), accessorinfo: info, accessoptions: options };
+    let msg = { type: "storage", archetype: "willsofts", moderator: moderator, API_URL: (0, app_info_1.getApiUrl)(), BASE_URL: (0, app_info_1.getBaseUrl)(), CDN_URL: (0, app_info_1.getCdnUrl)(), IMG_URL: (0, app_info_1.getImgUrl)(), DEFAULT_LANGUAGE: (0, app_info_1.getDefaultLanguage)(), API_TOKEN: (0, app_info_1.getApiToken)(), BASE_STORAGE: (0, app_info_1.getBaseStorage)(), SECURE_STORAGE: (0, app_info_1.isSecureStorage)(), BASE_CSS: (0, app_info_1.getBaseCss)(), CHAT_URL: (0, app_info_1.getChatUrl)(), MULTI_LANGUAGES: (0, app_info_1.getMultiLanguages)(), TOKEN_KEY: (0, app_info_1.getTokenKey)(), accessorinfo: info, accessoptions: options };
     return sendMessageToFrame(msg, win);
 }
 exports.sendMessageInterface = sendMessageInterface;
@@ -165,6 +176,8 @@ exports.sendMessageToOpener = sendMessageToOpener;
 function handleRequestMessage(data) {
     if (data.type == "storage") {
         console.log("handleRequestMessage: data", data);
+        if (data.TOKEN_KEY !== undefined)
+            (0, app_info_1.setTokenKey)(data.TOKEN_KEY);
         if (data.API_URL !== undefined)
             (0, app_info_1.setApiUrl)(data.API_URL);
         if (data.BASE_URL !== undefined)

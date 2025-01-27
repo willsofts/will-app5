@@ -541,7 +541,8 @@ function serializeParameters(parameters, addonParameters, raw) {
     console.log("serialize: parameters", JSON.stringify(parameters));
     console.log("serialize: jsondata", JSON.stringify(jsondata));
     let token = (0, messenger_1.getAccessorToken)();
-    let headers = { "authtoken": token, "data-type": cipherdata ? "json/cipher" : "", language: (0, app_info_1.getDefaultLanguage)() || "EN" };
+    let key = (0, messenger_1.getAccessTokenKey)();
+    let headers = { "authtoken": token, "tokenkey": key, "data-type": cipherdata ? "json/cipher" : "", language: (0, app_info_1.getDefaultLanguage)() || "EN" };
     //console.log("serialize: headers",JSON.stringify(headers));
     return { cipherdata: cipherdata, jsondata: JSON.stringify(jsondata), jsonobject: jsondata, headers: headers };
 }

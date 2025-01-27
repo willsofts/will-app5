@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
+exports.initConfigure = exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setTokenKey = exports.getTokenKey = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
 const messenger_1 = require("./messenger");
 const app_util_1 = require("./app.util");
 const appInfo = {
@@ -16,6 +16,7 @@ const appInfo = {
     SECURE_STORAGE: process.env.VUE_APP_SECURE_STORAGE == "true",
     BASE_CSS: process.env.VUE_APP_BASE_CSS,
     MULTI_LANGUAGES: ["EN", "TH"],
+    TOKEN_KEY: process.env.VUE_APP_TOKEN_KEY,
 };
 var APP_MULTI_LANGUAGES = process.env.VUE_APP_MULTI_LANGUAGES;
 if (APP_MULTI_LANGUAGES && APP_MULTI_LANGUAGES.trim().length > 0) {
@@ -88,6 +89,10 @@ function getBaseCss() { return appInfo.BASE_CSS; }
 exports.getBaseCss = getBaseCss;
 function setBaseCss(value) { appInfo.BASE_CSS = value; }
 exports.setBaseCss = setBaseCss;
+function getTokenKey() { return appInfo.TOKEN_KEY; }
+exports.getTokenKey = getTokenKey;
+function setTokenKey(value) { appInfo.TOKEN_KEY = value; }
+exports.setTokenKey = setTokenKey;
 var default_labels = [];
 var program_labels = [];
 var program_message = [];
@@ -114,6 +119,7 @@ function appInit(settings = { program_message, default_labels, program_labels, l
     else if (setting.listen_messaging == 'parent') {
         (0, messenger_1.bindingParentMessaging)();
     }
+    initConfigure();
 }
 exports.appInit = appInit;
 function getMultiLanguagesModel(datas) {
@@ -127,6 +133,8 @@ function assignAppConfig(data, callback) {
     console.log("assignAppConfig:", data);
     if (!data)
         return;
+    if (data.TOKEN_KEY !== undefined)
+        setTokenKey(data.TOKEN_KEY);
     if (data.API_URL !== undefined)
         setApiUrl(data.API_URL);
     if (data.BASE_URL !== undefined)
@@ -153,15 +161,32 @@ function assignAppConfig(data, callback) {
         setDefaultRawParameters(data.DEFAULT_RAW_PARAMETERS);
     console.info("appConfig: DEFAULT_LANGUAGE=" + getDefaultLanguage(), ", BASE_STORAGE=" + getBaseStorage(), ", DEFAULT_RAW_PARAMETERS=" + getDefaultRawParameters(), ", SECURE_STORAGE=" + isSecureStorage());
     console.info("appConfig: API_URL=" + getApiUrl(), ", BASE_URL=" + getBaseUrl(), ", CDN_URL=" + getCdnUrl(), ", IMG_URL=" + getImgUrl() + ", BASE_CSS=" + getBaseCss() + ", CHAT_URL=" + getChatUrl() + ", MULTI_LANGUAGES=" + getMultiLanguages());
+    console.info("appConfig: API_TOKEN=" + getApiToken());
     (0, app_util_1.createLinkStyle)(getBaseCss());
     if (callback)
         callback(data);
 }
 exports.assignAppConfig = assignAppConfig;
 function loadAppConfig(callback, url = "../config/app.config.json") {
+    initConfigure();
     fetch(url).then(response => response.json()).then(data => {
         assignAppConfig(data, callback);
-    }).catch(err => { console.error(err); if (callback)
+    }).catch(() => { if (callback)
         callback(); });
 }
 exports.loadAppConfig = loadAppConfig;
+function initConfigure() {
+    let key = "TOKEN_KEY";
+    let token = localStorage.getItem(key);
+    if (!token || token.trim().length == 0)
+        token = sessionStorage.getItem(key);
+    if (token)
+        setTokenKey(token);
+    const searchParams = new URLSearchParams(window.location.href);
+    token = searchParams.get("fsKey");
+    if (!token || token.trim().length == 0)
+        token = searchParams.get("tokenkey");
+    if (token)
+        setTokenKey(token);
+}
+exports.initConfigure = initConfigure;
