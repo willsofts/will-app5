@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initConfigure = exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setTokenKey = exports.getTokenKey = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
+exports.initAppConfig = exports.initConfigure = exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setTokenKey = exports.getTokenKey = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
 const messenger_1 = require("./messenger");
 const app_util_1 = require("./app.util");
 const appInfo = {
@@ -190,3 +190,12 @@ function initConfigure() {
         setTokenKey(token);
 }
 exports.initConfigure = initConfigure;
+function initAppConfig(callback) {
+    try {
+        assignAppConfig(window.getAppConfigs(), callback);
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+}
+exports.initAppConfig = initAppConfig;
