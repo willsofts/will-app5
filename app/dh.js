@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DH = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const app_info_1 = require("./app.info");
+const app_util_1 = require("./app.util");
 const messenger_1 = require("./messenger");
 const crypto_js_1 = __importDefault(require("crypto-js"));
 const bigi_1 = __importDefault(require("bigi"));
@@ -93,15 +94,19 @@ class DH {
         }
         return "";
     }
+    getRequestID() {
+        return (0, app_util_1.getRequestID)();
+    }
     requestPublicKey(dh, callback, aurl) {
         if (!aurl)
             aurl = (0, app_info_1.getApiUrl)() + "/api/crypto/dh";
         let authtoken = this.getAccessorToken();
+        let requestid = this.getRequestID();
         jquery_1.default.ajax({
             url: aurl,
             type: "POST",
             dataType: "json",
-            headers: { "authtoken": authtoken },
+            headers: { "authtoken": authtoken, "x-request-id": requestid },
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             error: (transport, status, errorThrown) => {
                 console.log(errorThrown);
@@ -127,6 +132,7 @@ class DH {
         if (!aurl)
             aurl = (0, app_info_1.getApiUrl)() + "/api/crypto/dh";
         let authtoken = this.getAccessorToken();
+        let requestid = this.getRequestID();
         jquery_1.default.ajax({
             url: aurl,
             type: "POST",
@@ -134,7 +140,7 @@ class DH {
                 publickey: this.publicKey
             },
             dataType: "json",
-            headers: { "authtoken": authtoken },
+            headers: { "authtoken": authtoken, "x-request-id": requestid },
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             error: (transport, status, errorThrown) => {
                 console.log(errorThrown);
@@ -152,6 +158,7 @@ class DH {
         if (!aurl)
             aurl = (0, app_info_1.getApiUrl)() + "/api/crypto/update";
         let authtoken = this.getAccessorToken();
+        let requestid = this.getRequestID();
         jquery_1.default.ajax({
             url: aurl,
             type: "POST",
@@ -159,7 +166,7 @@ class DH {
                 publickey: this.publicKey
             },
             dataType: "json",
-            headers: { "authtoken": authtoken },
+            headers: { "authtoken": authtoken, "x-request-id": requestid },
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             error: (transport, status, errorThrown) => {
                 console.log(errorThrown);

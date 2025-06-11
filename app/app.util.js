@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
+exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const bootbox_1 = __importDefault(require("../bootbox/bootbox"));
 const bootstrap_1 = require("bootstrap");
@@ -597,3 +597,24 @@ function disableControls() {
     });
 }
 exports.disableControls = disableControls;
+function generateUUID() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    else {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = (Math.random() * 16) | 0;
+            const v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+}
+exports.generateUUID = generateUUID;
+var fs_requestid = null;
+function getRequestID() {
+    if (!fs_requestid) {
+        fs_requestid = generateUUID();
+    }
+    return fs_requestid;
+}
+exports.getRequestID = getRequestID;

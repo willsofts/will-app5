@@ -200,6 +200,8 @@ function handleRequestMessage(data) {
             (0, app_info_1.setChatUrl)(data.CHAT_URL);
         if (data.MULTI_LANGUAGES !== undefined)
             (0, app_info_1.setMultiLanguages)(data.MULTI_LANGUAGES);
+        if (data.META_INFO !== undefined)
+            (0, app_info_1.setMetaInfo)(data.META_INFO);
         if (data.accessoptions !== undefined)
             setStorage("accessoptions", data.accessoptions);
         if (data.accessorinfo) {
@@ -208,7 +210,7 @@ function handleRequestMessage(data) {
         console.info("handleRequestMessage: accessor info", data.accessorinfo);
         console.info("handleRequestMessage: DEFAULT_LANGUAGE=" + (0, app_info_1.getDefaultLanguage)(), ", BASE_STORAGE=" + (0, app_info_1.getBaseStorage)(), ", DEFAULT_RAW_PARAMETERS=" + (0, app_info_1.getDefaultRawParameters)(), ", SECURE_STORAGE=" + (0, app_info_1.isSecureStorage)());
         console.info("handleRequestMessage: API_URL=" + (0, app_info_1.getApiUrl)(), ", BASE_URL=" + (0, app_info_1.getBaseUrl)(), ", CDN_URL=" + (0, app_info_1.getCdnUrl)(), ", IMG_URL=" + (0, app_info_1.getImgUrl)() + ", BASE_CSS=" + (0, app_info_1.getBaseCss)() + ", CHAT_URL=" + (0, app_info_1.getChatUrl)() + ", MULTI_LANGUAGES=" + (0, app_info_1.getMultiLanguages)());
-        console.info("handleRequestMessage: API_TOKEN=" + (0, app_info_1.getApiToken)());
+        console.info("handleRequestMessage: API_TOKEN=" + (0, app_info_1.getApiToken)(), ", META_INFO=", (0, app_info_1.getMetaInfo)());
         (0, app_util_1.createLinkStyle)((0, app_info_1.getBaseCss)());
     }
     if (messagingCallback && data.archetype == "willsofts") {
@@ -226,12 +228,14 @@ function setupDiffie(json) {
         dh.generator = info.generator;
         dh.otherPublicKey = info.publickey;
         dh.compute();
-        dh.updatePublicKey((success) => {
-            if (success) {
-                info.handshake = "C"; //confirm
-                saveAccessorInfo(json.body);
-            }
-        });
+        if (!(String((0, app_info_1.getMetaInfo)().DISABLE_DIFFIE) == "true")) {
+            dh.updatePublicKey((success) => {
+                if (success) {
+                    info.handshake = "C"; //confirm
+                    saveAccessorInfo(json.body);
+                }
+            });
+        }
         info.privatekey = dh.privateKey;
         info.publickey = dh.publicKey;
         info.sharedkey = dh.sharedKey;

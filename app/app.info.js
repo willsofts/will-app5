@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initAppConfig = exports.initConfigure = exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setTokenKey = exports.getTokenKey = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
+exports.initAppConfig = exports.initConfigure = exports.loadAppConfig = exports.assignAppConfig = exports.getMultiLanguagesModel = exports.appInit = exports.setProgramLabels = exports.setDefaultLabels = exports.setProgramMessage = exports.getProgramLabels = exports.getDefaultLabels = exports.getProgramMessage = exports.setMetaInfo = exports.getMetaInfo = exports.setTokenKey = exports.getTokenKey = exports.setBaseCss = exports.getBaseCss = exports.isSecureStorage = exports.setSecureStorage = exports.setDefaultRawParameters = exports.setBaseStorage = exports.setChatUrl = exports.setImgUrl = exports.setCdnUrl = exports.setBaseUrl = exports.setApiUrl = exports.setApiToken = exports.getDefaultRawParameters = exports.getBaseStorage = exports.getChatUrl = exports.getImgUrl = exports.getCdnUrl = exports.getBaseUrl = exports.getApiUrl = exports.getApiToken = exports.setDefaultLanguage = exports.getDefaultLanguage = exports.setMultiLanguages = exports.getMultiLanguages = exports.registerNotification = exports.getAppInfo = exports.DEFAULT_CONTENT_TYPE = void 0;
 const messenger_1 = require("./messenger");
 const app_util_1 = require("./app.util");
 const appInfo = {
@@ -17,6 +17,7 @@ const appInfo = {
     BASE_CSS: process.env.VUE_APP_BASE_CSS,
     MULTI_LANGUAGES: ["EN", "TH"],
     TOKEN_KEY: process.env.VUE_APP_TOKEN_KEY,
+    META_INFO: {},
 };
 var APP_MULTI_LANGUAGES = process.env.VUE_APP_MULTI_LANGUAGES;
 if (APP_MULTI_LANGUAGES && APP_MULTI_LANGUAGES.trim().length > 0) {
@@ -93,6 +94,10 @@ function getTokenKey() { return appInfo.TOKEN_KEY; }
 exports.getTokenKey = getTokenKey;
 function setTokenKey(value) { appInfo.TOKEN_KEY = value; }
 exports.setTokenKey = setTokenKey;
+function getMetaInfo() { return appInfo.META_INFO; }
+exports.getMetaInfo = getMetaInfo;
+function setMetaInfo(value = {}) { appInfo.META_INFO = value; }
+exports.setMetaInfo = setMetaInfo;
 var default_labels = [];
 var program_labels = [];
 var program_message = [];
@@ -159,9 +164,11 @@ function assignAppConfig(data, callback) {
         setMultiLanguages(data.MULTI_LANGUAGES);
     if (data.DEFAULT_RAW_PARAMETERS !== undefined)
         setDefaultRawParameters(data.DEFAULT_RAW_PARAMETERS);
+    if (data.META_INFO !== undefined)
+        setMetaInfo(data.META_INFO);
     console.info("appConfig: DEFAULT_LANGUAGE=" + getDefaultLanguage(), ", BASE_STORAGE=" + getBaseStorage(), ", DEFAULT_RAW_PARAMETERS=" + getDefaultRawParameters(), ", SECURE_STORAGE=" + isSecureStorage());
     console.info("appConfig: API_URL=" + getApiUrl(), ", BASE_URL=" + getBaseUrl(), ", CDN_URL=" + getCdnUrl(), ", IMG_URL=" + getImgUrl() + ", BASE_CSS=" + getBaseCss() + ", CHAT_URL=" + getChatUrl() + ", MULTI_LANGUAGES=" + getMultiLanguages());
-    console.info("appConfig: API_TOKEN=" + getApiToken());
+    console.info("appConfig: API_TOKEN=" + getApiToken(), ", META_INFO=", getMetaInfo());
     (0, app_util_1.createLinkStyle)(getBaseCss());
     if (callback)
         callback(data);
