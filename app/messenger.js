@@ -120,10 +120,22 @@ function sendMessageToFrame(data, win) {
         return false;
     try {
         console.log("sendMessageToFrame:", data);
-        if (!win)
-            win = document.getElementsByTagName('iframe')[0].contentWindow;
-        if (win)
+        data.archetype = "willsofts";
+        //if(!win) win = document.getElementsByTagName('iframe')[0].contentWindow;    
+        if (win) {
             win.postMessage(JSON.stringify(data), "*");
+        }
+        else {
+            let frames = document.getElementsByTagName('iframe');
+            console.log("frames:", frames);
+            if (frames) {
+                for (let fr of frames) {
+                    let awin = fr.contentWindow;
+                    if (awin)
+                        awin.postMessage(JSON.stringify(data), "*");
+                }
+            }
+        }
         return true;
     }
     catch (ex) {
@@ -214,8 +226,15 @@ function handleRequestMessage(data) {
         (0, app_util_1.createLinkStyle)((0, app_info_1.getBaseCss)());
     }
     if (messagingCallback && data.archetype == "willsofts") {
-        (0, app_info_1.loadAppConfig)(() => { if (messagingCallback)
-            messagingCallback(data); });
+        if (data.type == "storage") {
+            try {
+                (0, app_info_1.initConfigure)();
+            }
+            catch (ex) {
+                console.error(ex);
+            }
+        }
+        messagingCallback(data);
     }
 }
 exports.handleRequestMessage = handleRequestMessage;
