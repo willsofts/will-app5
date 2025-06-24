@@ -1,7 +1,12 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
+exports.fetchLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
+const jquery_1 = __importDefault(require("jquery"));
 const app_info_1 = require("./app.info");
+const messenger_1 = require("./messenger");
 function getLabel(name, defaultLabel, lang = (0, app_info_1.getDefaultLanguage)()) {
     let result = undefined;
     let default_labels = (0, app_info_1.getDefaultLabels)();
@@ -61,3 +66,54 @@ function getLabelModel(lang = (0, app_info_1.getDefaultLanguage)()) {
     return Object.assign(default_model, program_model);
 }
 exports.getLabelModel = getLabelModel;
+function mergeProgramLabels(data_labels) {
+    if (!data_labels)
+        return;
+    let program_labels = (0, app_info_1.getProgramLabels)();
+    for (let data of data_labels) {
+        let lang = data.language;
+        let lang_item = program_labels.find((item) => { return item.language == lang; });
+        if (lang_item) {
+            let concat_labels = [...lang_item.label, ...data.label];
+            lang_item.label = [...new Map(concat_labels.map(item => [item.name, item])).values()];
+        }
+    }
+}
+exports.mergeProgramLabels = mergeProgramLabels;
+function loadAndMergeLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.loadLabel) == "true", url = (0, app_info_1.getApiUrl)() + "/api/label/find") {
+    if (!loadLabel)
+        return;
+    //verify labeid with suffix .xml or not, coz db stored it as xxx.xml
+    if (id.indexOf(".xml") < 0)
+        id = id + ".xml";
+    fetchLabel(id, function (success, data) {
+        if (success) {
+            mergeProgramLabels(data.body);
+        }
+        if (callback)
+            callback(success, data);
+    }, url);
+}
+exports.loadAndMergeLabel = loadAndMergeLabel;
+function fetchLabel(id, callback, url = (0, app_info_1.getApiUrl)() + "/api/label/find") {
+    console.log("fetchLabel:", id);
+    let authtoken = (0, messenger_1.getAccessorToken)();
+    jquery_1.default.ajax({
+        url: url,
+        type: "POST",
+        data: JSON.stringify({ labelid: id }),
+        dataType: "json",
+        headers: { "authtoken": authtoken },
+        contentType: app_info_1.DEFAULT_CONTENT_TYPE,
+        error: function (transport, status, errorThrown) {
+            console.error(errorThrown);
+            if (callback)
+                callback(false, errorThrown);
+        },
+        success: function (data) {
+            if (callback)
+                callback(true, data);
+        }
+    });
+}
+exports.fetchLabel = fetchLabel;

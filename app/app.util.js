@@ -263,7 +263,7 @@ function alertbox(errcode, callback, defaultmsg, params, addonmsg, title, icon) 
     }
 }
 exports.alertbox = alertbox;
-function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o") {
+function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
     if (!msg) {
         console.log("alertDialog: msg undefined");
         return;
@@ -315,7 +315,7 @@ function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title
     }
 }
 exports.confirmbox = confirmbox;
-function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fa fa-question-circle") {
+function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
     try {
         let fs_confirmbtn = (0, msg_util_1.getMessageCode)("fsconfirmbtn");
         if (!fs_confirmbtn || (fs_confirmbtn == "" || fs_confirmbtn == "fsconfirmbtn"))
