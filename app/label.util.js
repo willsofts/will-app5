@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
+exports.fetchLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getApiLabel = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const app_info_1 = require("./app.info");
 const messenger_1 = require("./messenger");
@@ -66,9 +66,15 @@ function getLabelModel(lang = (0, app_info_1.getDefaultLanguage)()) {
     return Object.assign(default_model, program_model);
 }
 exports.getLabelModel = getLabelModel;
+function getApiLabel() {
+    return (0, app_info_1.getApiUrl)() + ((0, app_info_1.getMetaInfo)().API_LABEL || "/api/label/fetch");
+}
+exports.getApiLabel = getApiLabel;
 function mergeProgramLabels(data_labels) {
     if (!data_labels)
-        return;
+        return false;
+    if (!Array.isArray(data_labels) || data_labels.length <= 0)
+        return false;
     let program_labels = (0, app_info_1.getProgramLabels)();
     for (let data of data_labels) {
         let lang = data.language;
@@ -78,24 +84,22 @@ function mergeProgramLabels(data_labels) {
             lang_item.label = [...new Map(concat_labels.map(item => [item.name, item])).values()];
         }
     }
+    return true;
 }
 exports.mergeProgramLabels = mergeProgramLabels;
-function loadAndMergeLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.loadLabel) == "true", url = (0, app_info_1.getApiUrl)() + "/api/label/find") {
+function loadAndMergeLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.LOAD_LABEL) == "true", url = getApiLabel()) {
     if (!loadLabel)
         return;
-    //verify labeid with suffix .xml or not, coz db stored it as xxx.xml
-    if (id.indexOf(".xml") < 0)
-        id = id + ".xml";
     fetchLabel(id, function (success, data) {
         if (success) {
-            mergeProgramLabels(data.body);
+            let merged = mergeProgramLabels(data.body);
+            if (merged && callback)
+                callback(true, data);
         }
-        if (callback)
-            callback(success, data);
     }, url);
 }
 exports.loadAndMergeLabel = loadAndMergeLabel;
-function fetchLabel(id, callback, url = (0, app_info_1.getApiUrl)() + "/api/label/find") {
+function fetchLabel(id, callback, url = getApiLabel()) {
     console.log("fetchLabel:", id);
     let authtoken = (0, messenger_1.getAccessorToken)();
     jquery_1.default.ajax({
@@ -108,7 +112,7 @@ function fetchLabel(id, callback, url = (0, app_info_1.getApiUrl)() + "/api/labe
         error: function (transport, status, errorThrown) {
             console.error(errorThrown);
             if (callback)
-                callback(false, errorThrown);
+                callback(false, errorThrown, transport);
         },
         success: function (data) {
             if (callback)
