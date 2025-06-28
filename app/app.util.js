@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
+exports.resetRequestID = exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const bootbox_1 = __importDefault(require("../bootbox/bootbox"));
 const bootstrap_1 = require("bootstrap");
@@ -239,7 +239,7 @@ function successbox(callback, params) {
 exports.successbox = successbox;
 function warningbox(errcode, callback, params) {
     let title = (0, msg_util_1.getMessageCode)("fswarn", undefined, "Warning");
-    alertbox(errcode, callback, undefined, params, undefined, title, "fa fa-exclamation-circle");
+    alertbox(errcode, callback, undefined, params, undefined, title, "fas fa fa-exclamation-circle");
 }
 exports.warningbox = warningbox;
 function alertbox(errcode, callback, defaultmsg, params, addonmsg, title, icon) {
@@ -269,9 +269,7 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
         return;
     }
     try {
-        let fs_okbtn = (0, msg_util_1.getMessageCode)("fsokbtn");
-        if (!fs_okbtn || (fs_okbtn == "" || fs_okbtn == "fsokbtn"))
-            fs_okbtn = "OK";
+        let fs_okbtn = (0, msg_util_1.getMessageCode)("fsokbtn", undefined, "OK");
         bootbox_1.default.alert({
             title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
             message: msg,
@@ -279,6 +277,7 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
                 if (callbackfn)
                     callbackfn();
             },
+            backdrop: false,
             buttons: {
                 ok: { label: fs_okbtn }
             }
@@ -317,12 +316,8 @@ function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title
 exports.confirmbox = confirmbox;
 function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
     try {
-        let fs_confirmbtn = (0, msg_util_1.getMessageCode)("fsconfirmbtn");
-        if (!fs_confirmbtn || (fs_confirmbtn == "" || fs_confirmbtn == "fsconfirmbtn"))
-            fs_confirmbtn = "OK";
-        let fs_cancelbtn = (0, msg_util_1.getMessageCode)("fscancelbtn");
-        if (!fs_cancelbtn || (fs_cancelbtn == "" || fs_cancelbtn == "fscancelbtn"))
-            fs_cancelbtn = "Cancel";
+        let fs_confirmbtn = (0, msg_util_1.getMessageCode)("fsconfirmbtn", undefined, "OK");
+        let fs_cancelbtn = (0, msg_util_1.getMessageCode)("fscancelbtn", undefined, "Cancel");
         bootbox_1.default.confirm({
             title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
             message: msg,
@@ -336,6 +331,7 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
                         cancelCallback();
                 }
             },
+            backdrop: false,
             swapButtonOrder: true,
             buttons: {
                 confirm: { label: fs_confirmbtn },
@@ -618,3 +614,7 @@ function getRequestID() {
     return fs_requestid;
 }
 exports.getRequestID = getRequestID;
+function resetRequestID() {
+    fs_requestid = null;
+}
+exports.resetRequestID = resetRequestID;

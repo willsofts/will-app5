@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getApiLabel = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
+exports.fetchLabel = exports.loadAndMergeProgramLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getApiLabel = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const app_info_1 = require("./app.info");
 const messenger_1 = require("./messenger");
+const msg_util_1 = require("./msg.util");
 function getLabel(name, defaultLabel, lang = (0, app_info_1.getDefaultLanguage)()) {
     let result = undefined;
     let default_labels = (0, app_info_1.getDefaultLabels)();
@@ -88,17 +89,30 @@ function mergeProgramLabels(data_labels) {
 }
 exports.mergeProgramLabels = mergeProgramLabels;
 function loadAndMergeLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.LOAD_LABEL) == "true", url = getApiLabel()) {
+    loadAndMergeProgramLabel(id, callback, loadLabel, url);
+    (0, msg_util_1.loadAndMergeMessageCode)();
+}
+exports.loadAndMergeLabel = loadAndMergeLabel;
+function loadAndMergeProgramLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.LOAD_LABEL) == "true", url = getApiLabel()) {
     if (!loadLabel)
         return;
+    let label_cached = (0, messenger_1.getStorage)(id);
+    if (label_cached) {
+        let merged = mergeProgramLabels(label_cached);
+        if (merged && callback)
+            callback(true, label_cached);
+        return;
+    }
     fetchLabel(id, function (success, data) {
         if (success) {
+            (0, messenger_1.setStorage)(id, data.body);
             let merged = mergeProgramLabels(data.body);
             if (merged && callback)
-                callback(true, data);
+                callback(true, data.body);
         }
     }, url);
 }
-exports.loadAndMergeLabel = loadAndMergeLabel;
+exports.loadAndMergeProgramLabel = loadAndMergeProgramLabel;
 function fetchLabel(id, callback, url = getApiLabel()) {
     console.log("fetchLabel:", id);
     let authtoken = (0, messenger_1.getAccessorToken)();
