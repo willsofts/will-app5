@@ -56,7 +56,7 @@ export declare function appInit(settings?: {
     default_labels: any[];
     program_labels: any[];
     listen_messaging: string;
-}): void;
+}, callback?: Function): void;
 export declare function getMultiLanguagesModel(datas: any): any;
 export declare function assignAppConfig(data: any, callback?: Function): void;
 export declare function loadAppConfig(callback?: Function, url?: string): void;
@@ -250,7 +250,7 @@ export declare function handleRequestMessage(data: any): void;
 export declare function setupDiffie(json: any): void;
 export declare function getDH(): DH | null;
 export declare function bindingChildMessaging(): void;
-export declare function bindingParentMessaging(): void;
+export declare function bindingParentMessaging(callback?: Function): void;
 
 /* msg.util */
 export declare function getMessageCode(errcode: string, params?: Array<any>, defaultMessage?: string): string;

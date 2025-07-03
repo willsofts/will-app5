@@ -308,7 +308,7 @@ function bindingChildMessaging() {
     };
 }
 exports.bindingChildMessaging = bindingChildMessaging;
-function bindingParentMessaging() {
+function bindingParentMessaging(callback) {
     window.onmessage = function (e) {
         //console.log("window-main: onmessage:",e.data);
         try {
@@ -323,6 +323,8 @@ function bindingParentMessaging() {
             }
             //in case of child window, try to handle request message
             //handleRequestMessage(payload);
+            if (callback)
+                callback(payload);
         }
         catch (ex) {
             console.error(ex);

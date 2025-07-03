@@ -113,7 +113,7 @@ function setDefaultLabels(labels) { default_labels = labels; }
 exports.setDefaultLabels = setDefaultLabels;
 function setProgramLabels(labels) { program_labels = labels; }
 exports.setProgramLabels = setProgramLabels;
-function appInit(settings = { program_message, default_labels, program_labels, listen_messaging: 'child' }) {
+function appInit(settings = { program_message, default_labels, program_labels, listen_messaging: 'child' }, callback) {
     const setting = Object.assign({ listen_messaging: 'child' }, settings);
     setProgramMessage(setting.program_message);
     setDefaultLabels(setting.default_labels);
@@ -122,7 +122,7 @@ function appInit(settings = { program_message, default_labels, program_labels, l
         (0, messenger_1.bindingChildMessaging)();
     }
     else if (setting.listen_messaging == 'parent') {
-        (0, messenger_1.bindingParentMessaging)();
+        (0, messenger_1.bindingParentMessaging)(callback);
     }
     initConfigure();
 }
