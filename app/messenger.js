@@ -290,7 +290,7 @@ function getDH() {
 exports.getDH = getDH;
 function bindingChildMessaging() {
     window.onmessage = function (e) {
-        //console.log("window-messenger: onmessage:",e.data);
+        console.log("window-messenger: onmessage:", e.data);
         try {
             let payload = e.data;
             if (typeof payload === 'string') {
@@ -313,7 +313,7 @@ function bindingChildMessaging() {
 exports.bindingChildMessaging = bindingChildMessaging;
 function bindingParentMessaging(callback) {
     window.onmessage = function (e) {
-        //console.log("window-main: onmessage:",e.data);
+        console.log("window-main: onmessage:", e.data);
         try {
             let payload = e.data;
             if (typeof payload === 'string') {
