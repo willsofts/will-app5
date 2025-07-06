@@ -234,6 +234,9 @@ function handleRequestMessage(data) {
                 console.error(ex);
             }
         }
+        let excepttypes = (0, app_info_1.getMetaInfo)().EXCEPT_MESSAGE_TYPES || ["appinfo"];
+        if (excepttypes.includes(data.type))
+            return;
         messagingCallback(data);
     }
 }
