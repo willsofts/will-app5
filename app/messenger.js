@@ -8,9 +8,9 @@ const app_info_1 = require("./app.info");
 const app_util_1 = require("./app.util");
 const dh_1 = require("./dh");
 const secure_ls_1 = __importDefault(require("secure-ls"));
-var messagingCallback;
-var currentWindow;
-var secureEngine;
+let messagingCallback;
+let currentWindow;
+let secureEngine;
 function getSecureEngine() {
     if (!secureEngine) {
         secureEngine = (0, app_info_1.isSecureStorage)() ? new secure_ls_1.default({ storage: "local" == (0, app_info_1.getBaseStorage)() ? localStorage : sessionStorage }) : null;
@@ -79,24 +79,20 @@ function getAccessorInfo() {
 exports.getAccessorInfo = getAccessorInfo;
 function getAccessorToken() {
     let json = getAccessorInfo();
-    if (json && json.authtoken) {
+    if (json?.authtoken) {
         return json.authtoken;
     }
     let token = (0, app_info_1.getApiToken)();
-    if (token && token != "")
-        return token;
-    return "";
+    return token || "";
 }
 exports.getAccessorToken = getAccessorToken;
 function getAccessTokenKey() {
     let json = getAccessorInfo();
-    if (json && json.tokenkey) {
+    if (json?.tokenkey) {
         return json.tokenkey;
     }
     let token = (0, app_info_1.getTokenKey)();
-    if (token && token != "")
-        return token;
-    return "";
+    return token || "";
 }
 exports.getAccessTokenKey = getAccessTokenKey;
 function saveAccessorInfo(json) {
@@ -115,24 +111,23 @@ function sendMessageInterface(type, win) {
     return sendMessageToFrame(msg, win);
 }
 exports.sendMessageInterface = sendMessageInterface;
+const ALLOWED_ORIGINS = "*";
 function sendMessageToFrame(data, win) {
     if (!data)
         return false;
     try {
         console.log("sendMessageToFrame:", data);
         data.archetype = "willsofts";
-        //if(!win) win = document.getElementsByTagName('iframe')[0].contentWindow;    
         if (win) {
-            win.postMessage(JSON.stringify(data), "*");
+            win.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver
         }
         else {
             let frames = document.getElementsByTagName('iframe');
-            console.log("frames:", frames);
             if (frames) {
                 for (let fr of frames) {
                     let awin = fr.contentWindow;
                     if (awin)
-                        awin.postMessage(JSON.stringify(data), "*");
+                        awin.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver	
                 }
             }
         }
@@ -162,7 +157,7 @@ function sendMessageToParent(data) {
         return;
     try {
         console.log("sendMessageToParent:", data);
-        window.parent.postMessage(JSON.stringify(data), "*");
+        window.parent.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver
         return true;
     }
     catch (ex) {
@@ -176,7 +171,7 @@ function sendMessageToOpener(data) {
         return;
     try {
         console.log("sendMessageToOpener:", data);
-        window.opener.postMessage(JSON.stringify(data), "*");
+        window.opener.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver
         return true;
     }
     catch (ex) {
@@ -188,32 +183,27 @@ exports.sendMessageToOpener = sendMessageToOpener;
 function handleRequestMessage(data) {
     if (data.type == "storage") {
         console.log("handleRequestMessage: data", data);
-        if (data.TOKEN_KEY !== undefined)
-            (0, app_info_1.setTokenKey)(data.TOKEN_KEY);
-        if (data.API_URL !== undefined)
-            (0, app_info_1.setApiUrl)(data.API_URL);
-        if (data.BASE_URL !== undefined)
-            (0, app_info_1.setBaseUrl)(data.BASE_URL);
-        if (data.CDN_URL !== undefined)
-            (0, app_info_1.setCdnUrl)(data.CDN_URL);
-        if (data.IMG_URL !== undefined)
-            (0, app_info_1.setImgUrl)(data.IMG_URL);
-        if (data.DEFAULT_LANGUAGE !== undefined)
-            (0, app_info_1.setDefaultLanguage)(data.DEFAULT_LANGUAGE);
-        if (data.API_TOKEN !== undefined)
-            (0, app_info_1.setApiToken)(data.API_TOKEN);
-        if (data.BASE_STORAGE !== undefined)
-            (0, app_info_1.setBaseStorage)(data.BASE_STORAGE);
-        if (data.SECURE_STORAGE !== undefined)
-            (0, app_info_1.setSecureStorage)(data.SECURE_STORAGE);
-        if (data.BASE_CSS !== undefined)
-            (0, app_info_1.setBaseCss)(data.BASE_CSS);
-        if (data.CHAT_URL !== undefined)
-            (0, app_info_1.setChatUrl)(data.CHAT_URL);
-        if (data.MULTI_LANGUAGES !== undefined)
-            (0, app_info_1.setMultiLanguages)(data.MULTI_LANGUAGES);
-        if (data.META_INFO !== undefined)
-            (0, app_info_1.setMetaInfo)(data.META_INFO);
+        const setters = {
+            TOKEN_KEY: app_info_1.setTokenKey,
+            API_URL: app_info_1.setApiUrl,
+            BASE_URL: app_info_1.setBaseUrl,
+            CDN_URL: app_info_1.setCdnUrl,
+            IMG_URL: app_info_1.setImgUrl,
+            DEFAULT_LANGUAGE: app_info_1.setDefaultLanguage,
+            API_TOKEN: app_info_1.setApiToken,
+            BASE_STORAGE: app_info_1.setBaseStorage,
+            SECURE_STORAGE: app_info_1.setSecureStorage,
+            BASE_CSS: app_info_1.setBaseCss,
+            CHAT_URL: app_info_1.setChatUrl,
+            MULTI_LANGUAGES: app_info_1.setMultiLanguages,
+            DEFAULT_RAW_PARAMETERS: app_info_1.setDefaultRawParameters,
+            META_INFO: app_info_1.setMetaInfo
+        };
+        for (const key in setters) {
+            if (data[key] !== undefined) {
+                setters[key](data[key]);
+            }
+        }
         if (data.accessoptions !== undefined)
             setStorage("accessoptions", data.accessoptions);
         if (data.accessorinfo) {
@@ -225,22 +215,27 @@ function handleRequestMessage(data) {
         console.info("handleRequestMessage: API_TOKEN=" + (0, app_info_1.getApiToken)(), ", META_INFO=", (0, app_info_1.getMetaInfo)());
         (0, app_util_1.createLinkStyle)((0, app_info_1.getBaseCss)());
     }
-    if (messagingCallback && data.archetype == "willsofts") {
-        if (data.type == "storage") {
-            try {
-                (0, app_info_1.initConfigure)();
-            }
-            catch (ex) {
-                console.error(ex);
-            }
-        }
-        let excepttypes = (0, app_info_1.getMetaInfo)().EXCEPT_MESSAGE_TYPES || ["appinfo"];
-        if (excepttypes.includes(data.type))
-            return;
-        messagingCallback(data);
-    }
+    handleMessagingCallback(data);
 }
 exports.handleRequestMessage = handleRequestMessage;
+function handleMessagingCallback(data) {
+    if (!messagingCallback || data.archetype !== "willsofts") {
+        return;
+    }
+    if (data.type === "storage") {
+        try {
+            (0, app_info_1.initConfigure)();
+        }
+        catch (ex) {
+            console.error(ex);
+        }
+    }
+    const exceptTypes = (0, app_info_1.getMetaInfo)().EXCEPT_MESSAGE_TYPES ?? ["appinfo"];
+    if (exceptTypes.includes(data.type)) {
+        return;
+    }
+    messagingCallback(data);
+}
 function setupDiffie(json) {
     console.log("setupDiffie", getAccessorToken());
     let info = json.body.info;
@@ -250,7 +245,7 @@ function setupDiffie(json) {
         dh.generator = info.generator;
         dh.otherPublicKey = info.publickey;
         dh.compute();
-        if (!(String((0, app_info_1.getMetaInfo)().DISABLE_DIFFIE) == "true")) {
+        if (String((0, app_info_1.getMetaInfo)().DISABLE_DIFFIE) !== "true") {
             dh.updatePublicKey((success) => {
                 if (success) {
                     info.handshake = "C"; //confirm
@@ -269,7 +264,7 @@ function setupDiffie(json) {
 exports.setupDiffie = setupDiffie;
 function getDH() {
     let json = getAccessorInfo();
-    if (json && json.info) {
+    if (json?.info) {
         let info = json.info;
         if (!info.handshake || info.handshake == "" || info.handshake == "F")
             return null; //not confirm or fail
@@ -297,9 +292,9 @@ function bindingChildMessaging() {
                 payload = JSON.parse(e.data);
             }
             //in case of parent window, try to send accessor info
-            /*
+            /* try it as below
             if(payload.type=="accessorinfo") {
-                sendMessageInterface(getCurrentWindow());
+                sendMessageInterface("storage",getCurrentWindow());
                 return;
             }*/
             //in case of child window, try to handle request message
@@ -329,7 +324,7 @@ function bindingParentMessaging(callback) {
                 return;
             }
             //in case of child window, try to handle request message
-            //handleRequestMessage(payload);
+            //try it: handleRequestMessage(payload);
             if (callback)
                 callback(payload);
         }

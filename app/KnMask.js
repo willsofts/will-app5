@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.KnMask = void 0;
 class KnMask {
+    maskChar = "*";
     constructor(maskChar = "*") {
-        this.maskChar = "*";
         this.maskChar = maskChar;
     }
     /**
@@ -109,13 +109,11 @@ class KnMask {
                 if (i >= maskPoint) {
                     masked = masked.concat(c);
                 }
+                else if (i >= maskLength) {
+                    masked = masked.concat(maskChar);
+                }
                 else {
-                    if (i >= maskLength) {
-                        masked = masked.concat(maskChar);
-                    }
-                    else {
-                        masked = masked.concat(c);
-                    }
+                    masked = masked.concat(c);
                 }
             }
         }
@@ -132,6 +130,88 @@ class KnMask {
     }
     maskHeadAndTail(text, maskLength = 4) {
         return KnMask.maskingHeadAndTail(text, maskLength, this.maskChar);
+    }
+    maskSensitive(json, attributes = ["password", "pwd"]) {
+        return KnMask.maskingSensitive(json, attributes);
+    }
+    maskSensitiveObject(json, attributes = ["password", "pwd"]) {
+        return KnMask.maskingSensitiveObject(json, attributes);
+    }
+    maskAttribute(json, attributes = ["password", "pwd"]) {
+        return KnMask.maskingAttribute(json, attributes);
+    }
+    maskAttributeObject(json, attributes = ["password", "pwd"]) {
+        return KnMask.maskingAttributeObject(json, attributes);
+    }
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return new deep clone object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingSensitive(json) = { name: 'xxx', password: undefined, userpwd: undefined }
+     */
+    static maskingSensitive(json, attributes = ["password", "pwd"]) {
+        if (json) {
+            const newjson = structuredClone(json);
+            this.maskingSensitiveObject(newjson, attributes);
+            return newjson;
+        }
+        return json;
+    }
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return old object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingSensitiveObject(json) = { name: 'xxx', password: undefined, userpwd: undefined }
+     */
+    static maskingSensitiveObject(json, attributes = ["password", "pwd"]) {
+        if (json) {
+            let regex = new RegExp(attributes.join("|"), "i");
+            for (let key of Object.keys(json)) {
+                if (regex.test(key)) {
+                    json[key] = undefined;
+                }
+                if (typeof json[key] === 'object') {
+                    this.maskingSensitiveObject(json[key], attributes);
+                }
+            }
+        }
+    }
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return new deep clone object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingAttribute(json) = { name: 'xxx', password: '******', userpwd: '******' }
+     */
+    static maskingAttribute(json, attributes = ["password", "pwd"]) {
+        if (json) {
+            const newjson = structuredClone(json);
+            this.maskingAttributeObject(newjson, attributes);
+            return newjson;
+        }
+        return json;
+    }
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return old object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingAttributeObject(json) = { name: 'xxx', password: '******', userpwd: '******' }
+     */
+    static maskingAttributeObject(json, attributes = ["password", "pwd"], mask = "******") {
+        if (json) {
+            let regex = new RegExp(attributes.join("|"), "i");
+            for (let key of Object.keys(json)) {
+                if (regex.test(key)) {
+                    json[key] = mask;
+                }
+                if (typeof json[key] === 'object') {
+                    this.maskingAttributeObject(json[key], attributes);
+                }
+            }
+        }
     }
 }
 exports.KnMask = KnMask;

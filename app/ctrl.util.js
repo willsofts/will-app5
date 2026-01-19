@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatDataTable = exports.ensureTableSetting = exports.formatDecimal = exports.formatFloating = exports.removeDelimiter = exports.removeComma = exports.parseNumber = exports.setCaretPosition = exports.getCaretPosition = exports.clearComma = exports.putComma = exports.formatNumber = exports.checkInputKey = exports.checkInputNumberOnly = exports.inputNumberOnly = exports.triggerInput = exports.openCalendar = exports.clearCalendar = exports.getControlClasses = void 0;
+exports.formatDataTable = exports.ensureTableSetting = exports.formatDecimal = exports.formatFloating = exports.removeDelimiter = exports.removeComma = exports.parseNumber = exports.setCaretPosition = exports.getCaretPosition = exports.clearComma = exports.putComma = exports.formatNumber = exports.cleasingValues = exports.checkInputKey = exports.checkInputNumberOnly = exports.inputNumberOnly = exports.triggerInput = exports.openCalendar = exports.clearCalendar = exports.getControlClasses = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const Utilities_1 = require("./Utilities");
 function getControlClasses(attrClass, ...classes) {
@@ -11,7 +11,7 @@ function getControlClasses(attrClass, ...classes) {
     if (!attrClass)
         attrClass = "";
     for (let c of classes) {
-        if (attrClass.indexOf(c) < 0)
+        if (!attrClass.includes(c))
             ctrlClasses += " " + c;
     }
     return ctrlClasses;
@@ -23,7 +23,7 @@ function clearCalendar(src) {
         return;
     if (dpkr.is("[readonly]")) {
         let edit = dpkr.attr("editable");
-        if (!("true" == edit))
+        if ("true" != edit)
             return;
     }
     dpkr.val("");
@@ -39,7 +39,7 @@ function openCalendar(src) {
         return;
     if (dpkr.is("[readonly]")) {
         let edit = dpkr.attr("editable");
-        if (!("true" == edit))
+        if ("true" != edit)
             return;
     }
     try {
@@ -73,20 +73,19 @@ function triggerInput(input) {
 exports.triggerInput = triggerInput;
 function inputNumberOnly(myfield, e, decimal, isPlus) {
     let key;
-    let keychar;
     if (e)
         key = e.which;
     else
         return true;
-    keychar = String.fromCharCode(key);
+    let keychar = String.fromCodePoint(key);
     let element = myfield;
-    isPlus = (isPlus != null) ? true : false;
-    let isPoint = (decimal != null && decimal != 0) ? true : false;
-    if (key == 45 && element.value.indexOf('-') == -1 && !isPlus) {
+    isPlus = Boolean(isPlus);
+    let isPoint = decimal !== null && decimal !== undefined && Number(decimal) !== 0;
+    if (key == 45 && !element.value.includes('-') && !isPlus) {
         element.value = "-" + element.value;
         triggerInput(element);
     }
-    if ((key == 46) && (element.value.indexOf('.') == -1) && isPoint) {
+    if ((key == 46) && !element.value.includes('.') && isPoint) {
         if (element.value == "")
             element.value = '0';
         triggerInput(element);
@@ -94,7 +93,7 @@ function inputNumberOnly(myfield, e, decimal, isPlus) {
     }
     if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 27))
         return true;
-    else if ("0123456789".indexOf(keychar) > -1) {
+    else if ("0123456789".includes(keychar)) {
         triggerInput(element);
         return true;
     }
@@ -104,11 +103,10 @@ function inputNumberOnly(myfield, e, decimal, isPlus) {
 exports.inputNumberOnly = inputNumberOnly;
 function checkInputNumberOnly(myfield, e, decimal, isPlus) {
     let iskeyup = myfield.getAttribute('keyup');
-    if (iskeyup == null) { }
-    else if (iskeyup == false) {
+    if (iskeyup === "false") {
         return false;
     }
-    myfield.setAttribute('keyup', false);
+    myfield.setAttribute('keyup', "false");
     return inputNumberOnly(myfield, e, decimal, isPlus);
 }
 exports.checkInputNumberOnly = checkInputNumberOnly;
@@ -125,25 +123,7 @@ function checkInputKey(myfield, event, decimal, maxvalue) {
     }
 }
 exports.checkInputKey = checkInputKey;
-function formatNumber(element, maxvalue, decimal) {
-    let valueBfChange = element.value;
-    let data = element.value;
-    let point = 0;
-    if (decimal != null && decimal != "") {
-        let precisions = Number(decimal);
-        point = (precisions >= 0) ? precisions : 2;
-    }
-    let fraction = null;
-    if (maxvalue != null && maxvalue != "") {
-        if (Number(maxvalue) >= 0) {
-            fraction = maxvalue;
-            if (data.indexOf("-") > -1)
-                fraction++;
-        }
-        else {
-            fraction = null;
-        }
-    }
+function cleasingValues(element, valueBfChange, fraction, point, data) {
     data = clearComma(data);
     try {
         let dot = '';
@@ -155,23 +135,42 @@ function formatNumber(element, maxvalue, decimal) {
             x[0] = x[0].substring(1);
         }
         if ((fraction == 0 && Number(x[0]) > 0) || (fraction > 0 && x[0].length > fraction)) {
-            element.value = valueBfChange;
-            return true;
+            return [valueBfChange, true];
         }
         data = x[0] + dot;
     }
     catch (ex) {
         console.error(ex);
     }
-    element.value = putComma(data);
+    return [data, false];
+}
+exports.cleasingValues = cleasingValues;
+function formatNumber(element, maxvalue, decimal) {
+    let valueBfChange = element.value;
+    let data = element.value;
+    let point = 0;
+    if (decimal) {
+        let precisions = Number(decimal);
+        point = (precisions >= 0) ? precisions : 2;
+    }
+    let fraction = null;
+    let mxvalue = maxvalue ? Number(maxvalue) : -1;
+    if (mxvalue >= 0) {
+        fraction = mxvalue;
+        if (data.includes("-"))
+            fraction++;
+    }
+    let unchanged = false;
+    [data, unchanged] = cleasingValues(element, valueBfChange, fraction, point, data);
+    element.value = unchanged ? data : putComma(data);
 }
 exports.formatNumber = formatNumber;
 function putComma(data) {
-    if (data.indexOf(',') > -1) {
+    if (data.includes(',')) {
         data = clearComma(data);
     }
-    let move = (data.indexOf('.') > -1) ? data.indexOf('.') : data.length;
-    let minus = (data.indexOf('-') > -1) ? 1 : 0;
+    let move = (data.includes('.')) ? data.indexOf('.') : data.length;
+    let minus = (data.includes('-')) ? 1 : 0;
     while (move > 3) {
         if (minus && move <= 4) {
             break;
@@ -183,8 +182,8 @@ function putComma(data) {
 }
 exports.putComma = putComma;
 function clearComma(data) {
-    while (data.indexOf(',') != -1) {
-        data = data.replace(',', '');
+    while (data.includes(',')) {
+        data = data.replaceAll(',', '');
     }
     return data;
 }
@@ -228,7 +227,7 @@ function removeComma(avalue) {
     if (!avalue)
         return avalue;
     let result = avalue + "";
-    while (result.indexOf(",") > -1) {
+    while (result.includes(",")) {
         result = removeDelimiter(result, ",");
     }
     return result;
@@ -244,11 +243,9 @@ function formatFloating(avalue, decimal) {
     return formatDecimal(avalue, decimal, true);
 }
 exports.formatFloating = formatFloating;
-function formatDecimal(avalue, decimal, verifydecimal) {
+function resolveDecimalSign(avalue) {
     let sign = "";
     let result = avalue + "";
-    let bstr = "";
-    let cstr = "";
     let i = result.indexOf("-");
     if (i >= 0) {
         sign = "-";
@@ -261,12 +258,17 @@ function formatDecimal(avalue, decimal, verifydecimal) {
             result = result.substring(i + 1);
         }
     }
-    let astr = result;
-    i = result.indexOf(".");
+    return [result, sign];
+}
+function resolveDecimalString(avalue) {
+    let cstr = "";
+    let bstr = "";
+    let astr = avalue;
+    let i = avalue.indexOf(".");
     if (i > 0) {
-        astr = result.substring(0, i);
-        bstr = result.substring(i + 1);
-        cstr = result.substring(i);
+        astr = avalue.substring(0, i);
+        bstr = avalue.substring(i + 1);
+        cstr = avalue.substring(i);
     }
     let la = astr.length;
     if (la > 3) {
@@ -287,29 +289,30 @@ function formatDecimal(avalue, decimal, verifydecimal) {
             }
         }
     }
-    if (verifydecimal) {
-        if (decimal > 0) {
-            let l = bstr.length;
-            if (decimal > l) {
-                let j = 0;
-                for (j = l; j < decimal; j++) {
-                    bstr += "0";
-                }
-            }
-            else {
-                bstr = bstr.substring(0, decimal);
-            }
-            if (astr == "")
-                return "";
-            return sign + astr + "." + bstr;
-        }
-        else {
-            return sign + astr;
+    return [astr, bstr, cstr];
+}
+function formatDecimal(avalue, decimal, verifydecimal) {
+    let [result, sign] = resolveDecimalSign(avalue);
+    let [astr, bstr, cstr] = resolveDecimalString(result);
+    if (!verifydecimal) {
+        return sign + astr + cstr;
+    }
+    if (decimal <= 0) {
+        return sign + astr;
+    }
+    if (astr == "")
+        return "";
+    let l = bstr.length;
+    if (decimal > l) {
+        let j = 0;
+        for (j = l; j < decimal; j++) {
+            bstr += "0";
         }
     }
     else {
-        return sign + astr + cstr;
+        bstr = bstr.substring(0, decimal);
     }
+    return sign + astr + "." + bstr;
 }
 exports.formatDecimal = formatDecimal;
 const header_action = { type: "button", action: "edit" };
@@ -339,7 +342,7 @@ function formatDataTable(data, field) {
     try {
         if (field) {
             if (field.type == "DECIMAL") {
-                return formatFloating(data, field.decimal !== undefined ? field.decimal : 2);
+                return formatFloating(data, field.decimal === undefined ? 2 : field.decimal);
             }
             else if (field.type == "DATE") {
                 let date = Utilities_1.Utilities.parseDate(data);

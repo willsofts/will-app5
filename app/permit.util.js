@@ -6,8 +6,9 @@ const app_util_1 = require("./app.util");
 const permitsChunk = {};
 exports.DEFAULT_PERMITS = { all: false, insert: false, retrieve: false, update: false, delete: false, import: false, export: false, launch: true, print: false };
 class Permission {
+    permits;
     constructor(setting = {}) {
-        this.permits = Object.assign({}, exports.DEFAULT_PERMITS, setting);
+        this.permits = { ...exports.DEFAULT_PERMITS, ...setting };
     }
     canDo(action) {
         let cando = this.permits[action];
@@ -33,7 +34,7 @@ async function loadPermissions(pid) {
         let response = await fetch((0, app_info_1.getApiUrl)() + "/api/permit/get", options);
         let json = await response.json();
         console.log("loadPermissions: pid=" + pid, json);
-        if (json && json.body[pid]) {
+        if (json?.body[pid]) {
             permitsChunk[pid] = json.body[pid];
         }
     }

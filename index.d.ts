@@ -1,21 +1,7 @@
 /* app.info */
 export declare const DEFAULT_CONTENT_TYPE = "application/json; charset=UTF-8";
-export declare function getAppInfo(): {
-    DEFAULT_LANGUAGE: string | undefined;
-    API_URL: string | undefined;
-    BASE_URL: string | undefined;
-    CDN_URL: string | undefined;
-    IMG_URL: string | undefined;
-    CHAT_URL: string | undefined;
-    BASE_STORAGE: string | undefined;
-    API_TOKEN: string | undefined;
-    DEFAULT_RAW_PARAMETERS: boolean;
-    SECURE_STORAGE: boolean;
-    BASE_CSS: string | undefined;
-    MULTI_LANGUAGES: string[];
-    TOKEN_KEY: string | undefined;
-    META_INFO: any;
-};
+export declare function getConfig(key: string): any;
+export declare function getAppInfo(): any;
 export declare function registerNotification(callback: Function): void;
 export declare function getMultiLanguages(): string[];
 export declare function setMultiLanguages(values: any): void;
@@ -51,12 +37,7 @@ export declare function getProgramLabels(): Array<any>;
 export declare function setProgramMessage(message: Array<any>): void;
 export declare function setDefaultLabels(labels: Array<any>): void;
 export declare function setProgramLabels(labels: Array<any>): void;
-export declare function appInit(settings?: {
-    program_message: any[];
-    default_labels: any[];
-    program_labels: any[];
-    listen_messaging: string;
-}, callback?: Function): void;
+export declare function appInit(options?: any, callback?: Function): void;
 export declare function getMultiLanguagesModel(datas: any): any;
 export declare function assignAppConfig(data: any, callback?: Function): void;
 export declare function loadAppConfig(callback?: Function, url?: string): void;
@@ -67,6 +48,7 @@ export declare function initAppConfig(callback?: Function): void;
 export declare function getWindowByName(winname: string): any;
 export declare function closeChildWindows(): void;
 export declare function addWindow(awindow: any): void;
+export declare function buildFormParams(frm: any, params: any): void;
 export declare function submitWindow(settings: any): void;
 export declare function openNewWindow(settings: any): Window | null | undefined;
 export declare function startWaiting(): void;
@@ -112,7 +94,7 @@ export declare function serializeParameters(parameters?: any, addonParameters?: 
         authtoken: any;
         tokenkey: any;
         "data-type": string;
-        language: string;
+        language: any;
     };
 };
 export declare function decryptCipherData(headers: any, data: any): any;
@@ -121,16 +103,18 @@ export declare function disableControls(): void;
 export declare function generateUUID(): string;
 export declare function getRequestID(): string;
 export declare function resetRequestID(): void;
+export declare function randomize(): number;
 
 /* ctrl.util */
 export declare function getControlClasses(attrClass: string, ...classes: string[]): string;
 export declare function clearCalendar(src: any): void;
 export declare function openCalendar(src: any): void;
 export declare function triggerInput(input: any): void;
-export declare function inputNumberOnly(myfield: any, e: any, decimal: number | string, isPlus: boolean): boolean;
+export declare function inputNumberOnly(myfield: any, e: any, decimal: number | string, isPlus?: boolean): boolean;
 export declare function checkInputNumberOnly(myfield: any, e: any, decimal: number | string, isPlus: boolean): boolean;
 export declare function checkInputKey(myfield: any, event: any, decimal: number | string, maxvalue: number | string): void;
-export declare function formatNumber(element: any, maxvalue: number | string, decimal: number | string): true | undefined;
+export declare function cleasingValues(element: any, valueBfChange: any, fraction: any, point: number, data: any): [any, boolean];
+export declare function formatNumber(element: any, maxvalue: number | string, decimal: number | string): void;
 export declare function putComma(data: string): string;
 export declare function clearComma(data: string): string;
 export declare function getCaretPosition(ctrl: any): number;
@@ -143,6 +127,7 @@ export declare function formatDecimal(avalue: any, decimal: number, verifydecima
 export declare function ensureTableSetting(settings: any): any;
 export declare function formatDataTable(data: any, field: any): any;
 
+export declare const getPrimeNumber: () => number;
 export declare class DH {
     prime: string;
     generator: string;
@@ -215,13 +200,49 @@ export declare class KnMask {
     maskNumber(text?: string, mask?: string): string;
     maskTail(text?: string, maskLength?: number): string;
     maskHeadAndTail(text?: string, maskLength?: number): string;
+    maskSensitive(json: any, attributes?: string[]): any;
+    maskSensitiveObject(json: any, attributes?: string[]): void;
+    maskAttribute(json: any, attributes?: string[]): any;
+    maskAttributeObject(json: any, attributes?: string[]): void;
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return new deep clone object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingSensitive(json) = { name: 'xxx', password: undefined, userpwd: undefined }
+     */
+    static maskingSensitive(json: any, attributes?: string[]): any;
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return old object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingSensitiveObject(json) = { name: 'xxx', password: undefined, userpwd: undefined }
+     */
+    static maskingSensitiveObject(json: any, attributes?: string[]): void;
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return new deep clone object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingAttribute(json) = { name: 'xxx', password: '******', userpwd: '******' }
+     */
+    static maskingAttribute(json: any, attributes?: string[]): any;
+    /**
+     * @param json object
+     * @param attributes detected attributes, default is ["password","pwd"]
+     * @return old object with detected attributes
+     * ex. json = { name: "xxx", password: "yyy", userpwd: "1234" }
+     * after maskingAttributeObject(json) = { name: 'xxx', password: '******', userpwd: '******' }
+     */
+    static maskingAttributeObject(json: any, attributes?: string[], mask?: string): void;
 }
 
 /* label.util */
-export declare function getLabel(name: string, defaultLabel: string, lang?: string | undefined): any;
+export declare function getLabel(name: string, defaultLabel: string, lang?: any): any;
 export declare function getLabelItem(name: string, lang: string, label_category: Array<any>): any;
 export declare function getLabelObject(lang: string | undefined, label_category: Array<any>): any;
-export declare function getLabelModel(lang?: string | undefined): any;
+export declare function getLabelModel(lang?: any): any;
 export declare function getApiLabel(): any;
 export declare function mergeProgramLabels(data_labels: any): boolean;
 export declare function loadAndMergeLabel(id: string, callback?: Function, loadLabel?: boolean, url?: string): void;
@@ -269,20 +290,35 @@ export declare const DEFAULT_PAGE_SETTINGS: {
     offset: number;
     rows: number;
 };
+export interface PagingNumberInfo {
+    page: number;
+    text: string;
+    css: string;
+}
 export declare class Paging {
-    private setting;
+    setting: {
+        page: number;
+        rowsPerPage: number;
+        totalRows: number;
+        totalPages: number;
+        limit: number;
+        offset: number;
+        rows: number;
+    };
     constructor(setting?: {});
+    clear(): void;
     reset(setting: Object): void;
     hasPaging(rows: number): boolean;
     recordsOffset(): number;
     recordsNumber(seqno: number): number;
-    buildPagingModel(options?: {
-        totalRows: number;
-    }): {
-        page: number;
-        text: string;
-        css: string;
-    }[];
+    buildPagingModel(opts?: any): PagingNumberInfo[];
+    private resolveTotalRows;
+    private calculateTotalPages;
+    private calculatePagingRange;
+    private addFirstAndPrevious;
+    private getNextPageNumber;
+    private addPageNumbers;
+    private addLast;
 }
 
 /* permit.util */
@@ -467,7 +503,7 @@ export declare class Utilities {
      * @param attributes string array
      * @returns boolean
      */
-    static hasAttributes: <T extends string>(element: unknown, attributes: T[]) => element is Record<T, unknown>;
+    static hasAttributes<T extends string>(element: unknown, attributes: readonly T[]): element is Record<T, unknown>;
     /**
      * To parse integer (especially from string)
      * @param dataValue any
@@ -496,6 +532,10 @@ export declare class Utilities {
      * @returns Date
      */
     static parseDate(dataValue?: any, defaultValue?: Date): Date | undefined;
+    private static parseIsoDate;
+    private static parseCustomDate;
+    private static parseCustomTime;
+    private static parseCustomSecond;
     /**
      * To parse time with data value string in format HH:mm:ss
      * @param dataValue
@@ -553,6 +593,16 @@ export declare class Utilities {
      * @returns string
      */
     static getFormatWeekDate(date?: Date, fortype?: number, delimiter?: string, forstyle?: number, separater?: string): string;
+    /**
+     * To get date instance from string or number of timestamp
+     * @returns string
+     */
+    static date(input?: string | number, defaultValue?: Date): Date;
+    /**
+     * To verify it has value
+     * @returns boolean
+     */
+    static hasValue(val: any): boolean;
 }
 declare const bootbox: any;
 export { bootbox };

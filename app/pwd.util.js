@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkNumberOnly = exports.createNewPassword = exports.indexOfAlphabets = exports.isUpperCase = exports.isLowerCase = exports.isLetter = exports.isDigit = exports.getDigits = exports.getAlphabets = exports.randomPassword = void 0;
+const app_util_1 = require("./app.util");
 function randomPassword() {
     let now = new Date();
     let time = now.getTime().toString(16);
     time = time.substring(time.length - 4);
-    let l = Math.floor(Math.random() * 100000) + 1000;
+    let l = Math.floor((0, app_util_1.randomize)() * 100000) + 1000;
     let code = l.toString(16);
     code = code.substring(0, 4);
     return time + code;
@@ -77,6 +78,6 @@ exports.createNewPassword = createNewPassword;
 function checkNumberOnly(text) {
     if (!text || text.trim().length == 0)
         return false;
-    return /^[0-9]*$/.test(text);
+    return /^\d*$/.test(text);
 }
 exports.checkNumberOnly = checkNumberOnly;

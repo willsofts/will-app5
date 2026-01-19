@@ -2,14 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Utilities = void 0;
 class Utilities {
+    static NORMAL = 0;
+    static INTER = 1;
+    static SHORT = 0;
+    static LONG = 1;
+    static SHORT_MONTH_ARRAY = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    static LONG_MONTH_ARRAY = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    static SHORT_WEEK_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    static LONG_WEEK_DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     /**
      * To get date in format dd/MM/yyyy
      * @param now Date or undefind
      * @returns string
      */
     static getDateNow(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         return this.formatDate(now, false);
     }
     /**
@@ -18,15 +25,7 @@ class Utilities {
      * @returns string
      */
     static getTimeNow(now) {
-        if (!now)
-            now = new Date();
-        let hh = now.getHours();
-        let mm = now.getMinutes();
-        let ss = now.getSeconds();
-        let result = ((hh < 10) ? "0" : "") + hh;
-        result += ((mm < 10) ? ":0" : ":") + mm;
-        result += ((ss < 10) ? ":0" : ":") + ss;
-        return result;
+        return this.currentTime(now);
     }
     /**
      * To get datetime in format dd/MM/yyyy HH:mm:ss
@@ -34,8 +33,7 @@ class Utilities {
      * @returns string
      */
     static getDateTimeNow(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         return this.getDateNow(now) + " " + this.getTimeNow(now);
     }
     /**
@@ -116,8 +114,7 @@ class Utilities {
      * @returns string
      */
     static currentDate(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         let dd = now.getDate();
         let mm = now.getMonth() + 1;
         let yy = now.getFullYear();
@@ -132,8 +129,7 @@ class Utilities {
      * @returns string
      */
     static currentTime(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         let hh = now.getHours();
         let mm = now.getMinutes();
         let ss = now.getSeconds();
@@ -148,8 +144,7 @@ class Utilities {
      * @returns string
      */
     static currentDateTime(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         return this.currentDate(now) + " " + this.currentTime(now);
     }
     /**
@@ -158,8 +153,7 @@ class Utilities {
      * @returns number
      */
     static currentTimeMillis(now) {
-        if (!now)
-            now = new Date();
+        now = now ?? new Date();
         return now.getTime();
     }
     /**
@@ -169,8 +163,7 @@ class Utilities {
      * @returns Date
      */
     static addDays(days, date) {
-        if (!date)
-            date = new Date();
+        date = date ?? new Date();
         let result = new Date(date);
         result.setDate(result.getDate() + days);
         return result;
@@ -245,7 +238,18 @@ class Utilities {
      * @returns boolean
      */
     static isString(value) {
-        return typeof value === 'string' || value instanceof String;
+        return typeof value === 'string' || Object.prototype.toString.call(value) === '[object String]';
+    }
+    /**
+     * To check attributes is in object element
+     * @param element unknown
+     * @param attributes string array
+     * @returns boolean
+     */
+    static hasAttributes(element, attributes) {
+        if (element === undefined || element === null)
+            return false;
+        return attributes.every(attribute => Object.hasOwn(element, attribute));
     }
     /**
      * To parse integer (especially from string)
@@ -256,12 +260,10 @@ class Utilities {
     static parseInteger(dataValue, defaultValue) {
         if (dataValue) {
             if (this.isString(dataValue)) {
-                return parseInt(dataValue.replaceAll(',', ''));
+                return Number.parseInt(dataValue.replaceAll(',', ''));
             }
-            else {
-                if (typeof dataValue === "number") {
-                    return dataValue;
-                }
+            else if (typeof dataValue === "number") {
+                return dataValue;
             }
         }
         return defaultValue;
@@ -275,12 +277,10 @@ class Utilities {
     static parseFloat(dataValue, defaultValue) {
         if (dataValue) {
             if (this.isString(dataValue)) {
-                return parseFloat(dataValue.replaceAll(',', ''));
+                return Number.parseFloat(dataValue.replaceAll(',', ''));
             }
-            else {
-                if (typeof dataValue === "number") {
-                    return dataValue;
-                }
+            else if (typeof dataValue === "number") {
+                return dataValue;
             }
         }
         return defaultValue;
@@ -301,10 +301,8 @@ class Utilities {
                     return false;
                 return Boolean(pr);
             }
-            else {
-                if (typeof dataValue === "boolean") {
-                    return dataValue;
-                }
+            else if (typeof dataValue === "boolean") {
+                return dataValue;
             }
         }
         return defaultValue;
@@ -316,73 +314,87 @@ class Utilities {
      * @returns Date
      */
     static parseDate(dataValue, defaultValue) {
-        if (dataValue) {
-            if (this.isString(dataValue)) {
-                let datestr = ("" + dataValue).trim();
-                if (datestr != "") {
-                    if (datestr.indexOf("T") > 0 && datestr.indexOf("Z") > 0) {
-                        try {
-                            const dateInstance = new Date(datestr);
-                            if (dateInstance)
-                                return dateInstance;
-                        }
-                        catch (ex) { }
-                    }
-                    let result = undefined;
-                    let separator = " ";
-                    if (datestr.indexOf("T") > 0)
-                        separator = "T";
-                    let [date, time] = datestr.split(separator);
-                    if (date.indexOf(":") > 0) {
-                        time = date;
-                        date = "";
-                    }
-                    if (date) {
-                        if (date.indexOf("/") > 0) {
-                            let [day, month, year] = date.split('/');
-                            result = new Date(Number(year), Number(month) - 1, Number(day));
-                        }
-                        else if (date.indexOf("-") > 0) {
-                            let [year, month, day] = date.split('-');
-                            result = new Date(Number(year), Number(month) - 1, Number(day));
-                        }
-                    }
-                    if (time) {
-                        if (!result)
-                            result = new Date();
-                        let [hours, minutes, seconds] = time.split(':');
-                        if (hours !== undefined)
-                            result.setHours(Number(hours));
-                        if (minutes !== undefined)
-                            result.setMinutes(Number(minutes));
-                        if (seconds !== undefined) {
-                            if (seconds.indexOf(".") > 0) {
-                                let [sec, msec] = seconds.split(".");
-                                result.setSeconds(Number(sec));
-                                let idx = msec.indexOf("Z");
-                                if (idx > 0) {
-                                    msec = msec.substring(0, idx);
-                                }
-                                result.setMilliseconds(Number(msec));
-                            }
-                            else {
-                                result.setSeconds(Number(seconds));
-                            }
-                        }
-                        else {
-                            result.setSeconds(0);
-                        }
-                    }
-                    return result;
-                }
+        if (!dataValue)
+            return defaultValue;
+        if (dataValue instanceof Date) {
+            return dataValue;
+        }
+        if (!this.isString(dataValue))
+            return defaultValue;
+        let datestr = ("" + dataValue).trim();
+        if (!datestr)
+            return defaultValue;
+        return this.parseIsoDate(datestr) ?? this.parseCustomDate(datestr) ?? defaultValue;
+    }
+    static parseIsoDate(datestr) {
+        if (datestr.includes("T") && datestr.includes("Z")) {
+            try {
+                const dateInstance = new Date(datestr);
+                if (!Number.isNaN(dateInstance.valueOf()))
+                    return dateInstance;
             }
-            else {
-                if (dataValue instanceof Date) {
-                    return dataValue;
-                }
+            catch (ex) {
+                console.warn(ex);
             }
         }
-        return defaultValue;
+        return undefined;
+    }
+    static parseCustomDate(datestr) {
+        let result = undefined;
+        let separator = " ";
+        if (datestr.includes("T"))
+            separator = "T";
+        let [date, time] = datestr.split(separator);
+        if (date.includes(":")) {
+            time = date;
+            date = "";
+        }
+        if (date) {
+            if (date.includes("/")) {
+                let [day, month, year] = date.split('/');
+                result = new Date(Number(year), Number(month) - 1, Number(day));
+            }
+            else if (date.includes("-")) {
+                let [year, month, day] = date.split('-');
+                result = new Date(Number(year), Number(month) - 1, Number(day));
+            }
+        }
+        return this.parseCustomTime(result, time);
+    }
+    static parseCustomTime(date, time) {
+        let result = date;
+        if (time) {
+            result = result ?? new Date();
+            let [hours, minutes, seconds] = time.split(':');
+            if (hours)
+                result.setHours(Number(hours));
+            if (minutes)
+                result.setMinutes(Number(minutes));
+            if (seconds) {
+                result = this.parseCustomSecond(result, seconds);
+            }
+            else {
+                result.setSeconds(0);
+            }
+        }
+        return result;
+    }
+    static parseCustomSecond(date, seconds) {
+        if (seconds.includes(".")) {
+            let [sec, msec] = seconds.split(".");
+            date.setSeconds(Number(sec));
+            let idx = msec.indexOf("Z");
+            if (idx > 0) {
+                msec = msec.substring(0, idx);
+            }
+            if (msec.length > 3)
+                msec = msec.substring(0, 3);
+            date.setMilliseconds(Number(msec));
+        }
+        else {
+            date.setSeconds(Number(seconds));
+        }
+        return date;
     }
     /**
      * To parse time with data value string in format HH:mm:ss
@@ -394,11 +406,11 @@ class Utilities {
         if (dataValue && dataValue.trim().length > 0) {
             let [hours, minutes, seconds] = dataValue.split(":");
             let result = new Date();
-            if (hours !== undefined)
+            if (hours)
                 result.setHours(Number(hours));
-            if (minutes !== undefined)
+            if (minutes)
                 result.setMinutes(Number(minutes));
-            if (seconds !== undefined)
+            if (seconds)
                 result.setSeconds(Number(seconds));
             else
                 result.setSeconds(0);
@@ -446,19 +458,19 @@ class Utilities {
         let ml = now.getMilliseconds();
         let millis = ((ml < 100) ? "0" : "") + ml;
         if (includeMillis) {
-            return [year, month, day, hour, minute, second, millis].join(delimiter ? delimiter : '');
+            return [year, month, day, hour, minute, second, millis].join(delimiter ?? '');
         }
-        return [year, month, day, hour, minute, second].join(delimiter ? delimiter : '');
+        return [year, month, day, hour, minute, second].join(delimiter ?? '');
     }
     /**
      * To get date format with short or long month
      * @returns string
      */
     static getFormatDate(date = new Date(), fortype = this.SHORT, delimiter = " ", forstyle = this.NORMAL, separater = ",") {
-        var dd = date.getDate();
-        var mm = date.getMonth();
-        var yy = date.getFullYear();
-        var mstr = "";
+        let dd = date.getDate();
+        let mm = date.getMonth();
+        let yy = date.getFullYear();
+        let mstr = "";
         if (fortype == this.SHORT) { //short month
             mstr = this.SHORT_MONTH_ARRAY[mm];
         }
@@ -517,26 +529,29 @@ class Utilities {
         let result = this.getFormatDate(date, fortype, delimiter, forstyle, separater);
         return weekday + separater + delimiter + result;
     }
+    /**
+     * To get date instance from string or number of timestamp
+     * @returns string
+     */
+    static date(input, defaultValue) {
+        if (input) {
+            if (typeof input == 'string') {
+                let value = this.parseInteger(input);
+                if (value)
+                    return new Date(value);
+            }
+            if (typeof input == 'number') {
+                return new Date(input);
+            }
+        }
+        return defaultValue ?? new Date();
+    }
+    /**
+     * To verify it has value
+     * @returns boolean
+     */
+    static hasValue(val) {
+        return val !== undefined && val !== null && val !== "";
+    }
 }
 exports.Utilities = Utilities;
-Utilities.NORMAL = 0;
-Utilities.INTER = 1;
-Utilities.SHORT = 0;
-Utilities.LONG = 1;
-Utilities.SHORT_MONTH_ARRAY = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-Utilities.LONG_MONTH_ARRAY = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-Utilities.SHORT_WEEK_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-Utilities.LONG_WEEK_DAY = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-/**
- * To check attributes is in object element
- * @param element unknown
- * @param attributes string array
- * @returns boolean
- */
-Utilities.hasAttributes = (element, attributes) => {
-    if (element === undefined || element === null)
-        return false;
-    return attributes.every((attribute) => {
-        return Object.prototype.hasOwnProperty.call(element, attribute);
-    });
-};

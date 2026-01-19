@@ -3,15 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Paging = exports.DEFAULT_PAGE_SETTINGS = void 0;
 exports.DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0 };
 class Paging {
+    setting;
     constructor(setting = {}) {
-        this.setting = Object.assign({}, exports.DEFAULT_PAGE_SETTINGS, setting);
+        this.setting = { ...exports.DEFAULT_PAGE_SETTINGS, ...setting };
     }
     clear() {
         this.reset(exports.DEFAULT_PAGE_SETTINGS);
     }
     reset(setting) {
         if (setting) {
-            this.setting = Object.assign(this.setting, setting);
+            this.setting = { ...this.setting, ...setting };
         }
     }
     hasPaging(rows) {
@@ -30,70 +31,86 @@ class Paging {
     recordsNumber(seqno) {
         return seqno + this.recordsOffset();
     }
-    buildPagingModel(options = { totalRows: 0 }) {
-        let results = [];
-        let fsRows = options.totalRows;
-        if (!fsRows) {
-            fsRows = this.setting.totalRows;
+    buildPagingModel(opts) {
+        const options = opts ?? { totalRows: 0 };
+        const results = [];
+        const totalRows = this.resolveTotalRows(options.totalRows);
+        const totalPages = this.calculateTotalPages(totalRows);
+        const pagingRange = this.calculatePagingRange();
+        this.addFirstAndPrevious(results, pagingRange);
+        this.addPageNumbers(results, totalRows, totalPages, pagingRange);
+        this.addLast(results, totalRows, pagingRange);
+        return results;
+    }
+    resolveTotalRows(totalRows) {
+        return totalRows || this.setting.totalRows;
+    }
+    calculateTotalPages(totalRows) {
+        let pages = 0;
+        for (let i = 0; i < totalRows; i += this.setting.rowsPerPage) {
+            pages++;
         }
-        let fsPageNumber = 0;
-        let fsPageNo = 0;
-        let fsTotalPage = 0;
-        let fsPages = this.setting.page;
-        let fsChapters = this.setting.rowsPerPage;
-        for (let i = 0; i < fsRows; i += fsChapters) {
-            fsTotalPage++;
+        return pages;
+    }
+    calculatePagingRange() {
+        let pages = this.setting.page;
+        let chapters = this.setting.rowsPerPage;
+        let limit = this.setting.limit <= 0 ? chapters : this.setting.limit;
+        let counter = 0;
+        let startIdx = pages;
+        while (startIdx > limit) {
+            counter++;
+            startIdx -= limit;
         }
-        let fsCounter = 0;
-        let fsStartIdx = fsPages;
-        let fsLimit = this.setting.limit;
-        if (fsLimit <= 0) {
-            fsLimit = fsChapters;
+        return { pages, chapters, limit, previousPage: counter * limit };
+    }
+    addFirstAndPrevious(results, range) {
+        if (range.limit > 0 && range.pages > range.limit) {
+            results.push({ page: 1, text: "|<", css: "" }, { page: range.previousPage, text: "<<", css: "" });
         }
-        while (fsStartIdx > fsLimit) {
-            fsCounter++;
-            fsStartIdx -= fsLimit;
-        }
-        let fsPreviousPage = fsCounter * fsLimit;
-        if (fsLimit > 0 && (fsPages > fsLimit)) {
-            let first = { page: 1, text: "|<", css: "" };
-            let previous = { page: fsPreviousPage, text: "<<", css: "" };
-            results.push(first);
-            results.push(previous);
-        }
-        for (let i = 0; i < fsRows; i += fsChapters) {
-            fsPageNumber++;
-            if (fsLimit > 0) {
-                if (fsPageNumber <= fsPreviousPage) {
+    }
+    getNextPageNumber(page, totalPages) {
+        let nextPage = page;
+        if (nextPage > totalPages)
+            nextPage = totalPages;
+        return nextPage;
+    }
+    addPageNumbers(results, totalRows, totalPages, range) {
+        let pageNumber = 0;
+        let pageCounter = 0;
+        for (let i = 0; i < totalRows; i += range.chapters) {
+            pageNumber++;
+            if (range.limit > 0) {
+                if (pageNumber <= range.previousPage)
                     continue;
-                }
-                fsPageNo++;
-                if (fsLimit < fsPageNo) {
-                    fsPageNumber = fsPageNumber + fsLimit - 1;
-                    if (fsPageNumber > fsTotalPage) {
-                        fsPageNumber = fsTotalPage;
-                    }
-                    let next = { page: fsPageNumber, text: ">>", css: "" };
-                    results.push(next);
+                pageCounter++;
+                if (range.limit < pageCounter) {
+                    let nextPage = this.getNextPageNumber(pageNumber, totalPages);
+                    results.push({ page: nextPage, text: ">>", css: "" });
                     break;
                 }
             }
-            let fsSelected = "";
-            if (fsPages == fsPageNumber || (fsPageNumber == 1 && fsPages == 0)) {
-                fsSelected = "pageselectedclass active";
-            }
-            let current = { page: fsPageNumber, text: "" + fsPageNumber, css: fsSelected };
-            results.push(current);
+            const selected = range.pages === pageNumber ||
+                (pageNumber === 1 && range.pages === 0)
+                ? "pageselectedclass active"
+                : "";
+            results.push({
+                page: pageNumber,
+                text: String(pageNumber),
+                css: selected
+            });
         }
-        if (fsLimit < fsPageNo) {
-            fsPageNumber = 0;
-            for (let i = 0; i < fsRows; i += fsChapters) {
-                fsPageNumber++;
-            }
-            let last = { page: fsPageNumber, text: ">|", css: "" };
-            results.push(last);
+    }
+    addLast(results, totalRows, range) {
+        if (range.limit <= 0)
+            return;
+        let pageCount = 0;
+        for (let i = 0; i < totalRows; i += range.chapters) {
+            pageCount++;
         }
-        return results;
+        if (range.limit < pageCount) {
+            results.push({ page: pageCount, text: ">|", css: "" });
+        }
     }
 }
 exports.Paging = Paging;

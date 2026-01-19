@@ -3,9 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetRequestID = exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
+exports.randomize = exports.resetRequestID = exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.buildFormParams = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
 const jquery_1 = __importDefault(require("jquery"));
-const bootbox_1 = __importDefault(require("../bootbox/bootbox"));
+const bootbox_1 = __importDefault(require("bootbox"));
 const bootstrap_1 = require("bootstrap");
 const msg_util_1 = require("./msg.util");
 const messenger_1 = require("./messenger");
@@ -46,6 +46,34 @@ function addWindow(awindow) {
     fs_winary.push(awindow);
 }
 exports.addWindow = addWindow;
+function buildFormParams(frm, params) {
+    if (typeof (params) === "string") {
+        let prms = params.split("&");
+        for (let prm of prms) {
+            let kary = prm.split("=");
+            let inp = (0, jquery_1.default)('<input type="hidden" name="' + kary[0] + '"></input>');
+            inp.val(kary[1]);
+            frm.append(inp);
+        }
+    }
+    else if (Array.isArray(params)) {
+        for (let prm of params) {
+            if (prm.name) {
+                let inp = (0, jquery_1.default)('<input type="hidden" name="' + prm.name + '"></input>');
+                inp.val(prm.value);
+                frm.append(inp);
+            }
+        }
+    }
+    else if (params) {
+        for (let prm in params) {
+            let inp = (0, jquery_1.default)('<input type="hidden" name="' + prm + '"></input>');
+            inp.val(params[prm]);
+            frm.append(inp);
+        }
+    }
+}
+exports.buildFormParams = buildFormParams;
 function submitWindow(settings) {
     let p = settings;
     if ((p.url && p.url != "") && p.params) {
@@ -53,36 +81,7 @@ function submitWindow(settings) {
         let frm = (0, jquery_1.default)("<form method='" + method + "'></form>");
         frm.attr("action", p.url);
         frm.attr("target", p.windowName);
-        if (typeof (p.params) === "string") {
-            let prms = p.params.split("&");
-            for (let i = 0; i < prms.length; i++) {
-                let kary = prms[i].split("=");
-                let inp = (0, jquery_1.default)('<input type="hidden" name="' + kary[0] + '"></input>');
-                inp.val(kary[1]);
-                frm.append(inp);
-            }
-        }
-        else {
-            if (Array.isArray(p.params)) {
-                for (let i = 0; i < p.params.length; i++) {
-                    let prm = p.params[i];
-                    if (prm.name) {
-                        let inp = (0, jquery_1.default)('<input type="hidden" name="' + prm.name + '"></input>');
-                        inp.val(prm.value);
-                        frm.append(inp);
-                    }
-                }
-            }
-            else {
-                if (p.params) {
-                    for (let prm in p.params) {
-                        let inp = (0, jquery_1.default)('<input type="hidden" name="' + prm + '"></input>');
-                        inp.val(p.params[prm]);
-                        frm.append(inp);
-                    }
-                }
-            }
-        }
+        buildFormParams(frm, p.params);
         let layer = (0, jquery_1.default)("<div class='open-new-window-submit-layer'></div>");
         layer.append(frm);
         (0, jquery_1.default)("body").append(layer);
@@ -103,7 +102,7 @@ function openNewWindow(settings) {
         fullScreen: null,
         params: null
     };
-    let p = Object.assign({}, defaultSettings, settings);
+    let p = { ...defaultSettings, ...settings };
     try {
         let fswin = getWindowByName(p.winName);
         if (fswin) {
@@ -133,7 +132,7 @@ function openNewWindow(settings) {
             fs_window = window.open(p.url, p.windowName, fs_features);
     }
     if (fs_window)
-        fs_window.opener = self;
+        fs_window.opener = globalThis;
     try {
         addWindow(fs_window);
     }
@@ -187,13 +186,8 @@ function submitFailure(xhr, status, errorThrown, checking = true) {
 }
 exports.submitFailure = submitFailure;
 function parseErrorThrown(xhr, status, errorThrown) {
-    if (!errorThrown) {
+    if (!errorThrown || errorThrown == xhr.status) {
         errorThrown = xhr.responseText;
-    }
-    else {
-        if (errorThrown == xhr.status) {
-            errorThrown = xhr.responseText;
-        }
     }
     try {
         if (xhr.status == 400 || xhr.status == 401)
@@ -251,15 +245,13 @@ function alertbox(errcode, callback, defaultmsg, params, addonmsg, title, icon) 
             txt += " " + addonmsg;
         alertDialog(txt, callback, title, icon);
     }
+    else if (defaultmsg) {
+        if (addonmsg)
+            defaultmsg += " " + addonmsg;
+        alertDialog(defaultmsg, callback, title, icon);
+    }
     else {
-        if (defaultmsg) {
-            if (addonmsg)
-                defaultmsg += " " + addonmsg;
-            alertDialog(defaultmsg, callback, title, icon);
-        }
-        else {
-            alertDialog(errcode, callback, title, icon);
-        }
+        alertDialog(errcode, callback, title, icon);
     }
 }
 exports.alertbox = alertbox;
@@ -270,7 +262,10 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
     }
     try {
         let fs_okbtn = (0, msg_util_1.getMessageCode)("fsokbtn", undefined, "OK");
-        bootbox_1.default.alert({
+        let box = globalThis.bootbox;
+        if (!box)
+            box = bootbox_1.default;
+        box.alert({
             title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
             message: msg,
             callback: function () {
@@ -302,15 +297,13 @@ function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title
             txt += " " + addonmsg;
         return confirmDialog(txt, okFn, cancelFn, title, icon);
     }
+    else if (defaultmsg) {
+        if (addonmsg)
+            defaultmsg += " " + addonmsg;
+        return confirmDialog(defaultmsg, okFn, cancelFn, title, icon);
+    }
     else {
-        if (defaultmsg) {
-            if (addonmsg)
-                defaultmsg += " " + addonmsg;
-            return confirmDialog(defaultmsg, okFn, cancelFn, title, icon);
-        }
-        else {
-            return confirmDialog(errcode, okFn, cancelFn, title, icon);
-        }
+        return confirmDialog(errcode, okFn, cancelFn, title, icon);
     }
 }
 exports.confirmbox = confirmbox;
@@ -318,7 +311,8 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
     try {
         let fs_confirmbtn = (0, msg_util_1.getMessageCode)("fsconfirmbtn", undefined, "OK");
         let fs_cancelbtn = (0, msg_util_1.getMessageCode)("fscancelbtn", undefined, "Cancel");
-        bootbox_1.default.confirm({
+        let box = globalThis.bootbox ?? bootbox_1.default;
+        box.confirm({
             title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
             message: msg,
             callback: function (result) {
@@ -326,9 +320,8 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
                     if (okCallback)
                         okCallback();
                 }
-                else {
-                    if (cancelCallback)
-                        cancelCallback();
+                else if (cancelCallback) {
+                    cancelCallback();
                 }
             },
             backdrop: false,
@@ -340,7 +333,6 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
         });
         let dialog = (0, jquery_1.default)(".bootbox > .modal-dialog");
         dialog.draggable();
-        return true;
     }
     catch (ex) {
         console.error(ex);
@@ -474,12 +466,12 @@ function confirmRevise(params, okFn, cancelFn, addonmsg) {
     return true;
 }
 exports.confirmRevise = confirmRevise;
-var mouseX = 0;
-var mouseY = 0;
+let mouseX = 0;
+let mouseY = 0;
 function startApplication(pid, callback) {
     console.log("startApplication: pid=" + pid);
     (0, jquery_1.default)(document).on("mousedown", function (e) { mouseX = e.pageX; mouseY = e.pageY; });
-    (0, jquery_1.default)(window).on("beforeunload", function (e) {
+    (0, jquery_1.default)(globalThis).on("beforeunload", function (e) {
         if (fs_winary.length > 0) {
             e.preventDefault();
             e.returnValue = "";
@@ -487,7 +479,9 @@ function startApplication(pid, callback) {
         }
     }).on("unload", function () { closeChildWindows(); });
     //disable bootstrap modal auto close when click outside and ESC key
-    let modal = jquery_1.default.fn.modal;
+    let modal = jquery_1.default?.fn?.modal;
+    if (!modal)
+        modal = globalThis.jQuery?.fn?.modal;
     if (modal) {
         try {
             //bootstrap v4
@@ -539,7 +533,6 @@ function serializeParameters(parameters, addonParameters, raw) {
     let token = (0, messenger_1.getAccessorToken)();
     let key = (0, messenger_1.getAccessTokenKey)();
     let headers = { "authtoken": token, "tokenkey": key, "data-type": cipherdata ? "json/cipher" : "", language: (0, app_info_1.getDefaultLanguage)() || "EN" };
-    //console.log("serialize: headers",JSON.stringify(headers));
     return { cipherdata: cipherdata, jsondata: JSON.stringify(jsondata), jsonobject: jsondata, headers: headers };
 }
 exports.serializeParameters = serializeParameters;
@@ -598,15 +591,15 @@ function generateUUID() {
         return crypto.randomUUID();
     }
     else {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-            const r = (Math.random() * 16) | 0;
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAll(/[xy]/g, function (c) {
+            const r = Math.trunc(randomize() * 16);
             const v = c === 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
     }
 }
 exports.generateUUID = generateUUID;
-var fs_requestid = null;
+let fs_requestid = null;
 function getRequestID() {
     if (!fs_requestid) {
         fs_requestid = generateUUID();
@@ -618,3 +611,10 @@ function resetRequestID() {
     fs_requestid = null;
 }
 exports.resetRequestID = resetRequestID;
+function randomize() {
+    const cryptoObj = globalThis.crypto ?? globalThis.msCrypto;
+    let array = new Uint32Array(1);
+    cryptoObj.getRandomValues(array);
+    return array[0] / (0xFFFFFFFF + 1);
+}
+exports.randomize = randomize;

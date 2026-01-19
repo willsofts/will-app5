@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DH = void 0;
+exports.DH = exports.getPrimeNumber = void 0;
 const jquery_1 = __importDefault(require("jquery"));
 const app_info_1 = require("./app.info");
 const app_util_1 = require("./app.util");
@@ -11,15 +11,25 @@ const messenger_1 = require("./messenger");
 const crypto_js_1 = __importDefault(require("crypto-js"));
 const bigi_1 = __importDefault(require("bigi"));
 const getPrimes = function (min, max) {
-    const result = Array(max + 1).fill(0).map((_, i) => i);
-    for (let i = 2; i <= Math.sqrt(max + 1); i++) {
-        for (let j = i ** 2; j < max + 1; j += i)
-            delete result[j];
+    const isPrime = new Array(max + 1).fill(true);
+    isPrime[0] = isPrime[1] = false;
+    for (let i = 2; i <= Math.sqrt(max); i++) {
+        if (isPrime[i]) {
+            for (let j = i * i; j <= max; j += i) {
+                isPrime[j] = false;
+            }
+        }
     }
-    return Object.values(result.slice(min));
+    const result = [];
+    for (let i = Math.max(min, 2); i <= max; i++) {
+        if (isPrime[i]) {
+            result.push(i);
+        }
+    }
+    return result;
 };
 const getRandomNum = function (min, max) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor((0, app_util_1.randomize)() * (max - min + 1) + min);
 };
 const getRandomPrime = function (min, max) {
     const primes = getPrimes(min, max);
@@ -28,14 +38,21 @@ const getRandomPrime = function (min, max) {
 const getPrimeNumber = function () {
     return getRandomPrime(1000, 10000);
 };
+exports.getPrimeNumber = getPrimeNumber;
 class DH {
+    prime;
+    generator;
+    privateKey;
+    publicKey;
+    sharedKey;
+    otherPublicKey;
     constructor() {
-        this.prime = "" + getPrimeNumber();
-        this.generator = "" + getPrimeNumber();
-        this.privateKey = "" + getPrimeNumber();
-        this.publicKey = "" + getPrimeNumber();
-        this.sharedKey = "" + getPrimeNumber();
-        this.otherPublicKey = "" + getPrimeNumber();
+        this.prime = "" + (0, exports.getPrimeNumber)();
+        this.generator = "" + (0, exports.getPrimeNumber)();
+        this.privateKey = "" + (0, exports.getPrimeNumber)();
+        this.publicKey = "" + (0, exports.getPrimeNumber)();
+        this.sharedKey = "" + (0, exports.getPrimeNumber)();
+        this.otherPublicKey = "" + (0, exports.getPrimeNumber)();
     }
     encryptText(word, keyBase64) {
         let key = crypto_js_1.default.enc.Base64.parse(keyBase64);
@@ -89,7 +106,7 @@ class DH {
     }
     getAccessorToken() {
         let json = this.getAccessorInfo();
-        if (json && json.authtoken) {
+        if (json?.authtoken) {
             return json.authtoken;
         }
         return "";

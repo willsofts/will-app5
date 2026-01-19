@@ -28,20 +28,19 @@ function getMessageCode(errcode, params, defaultMessage) {
             }
         }
     }
-    return defaultMessage ? defaultMessage : errcode;
+    return defaultMessage ?? errcode;
 }
 exports.getMessageCode = getMessageCode;
 function replaceString(str, arrStr) {
     if (arrStr) {
-        let regex = /%s/;
-        for (let i = 0; i < arrStr.length; i++) {
-            let t_str = arrStr[i];
-            str = str.replace(regex, t_str);
+        let regex = /%s/g;
+        for (let t_str of arrStr) {
+            str = str.replaceAll(regex, t_str);
         }
     }
     if (str) {
         let regex = /%s/g;
-        str = str.replace(regex, "");
+        str = str.replaceAll(regex, "");
     }
     return str;
 }
