@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.randomize = exports.resetRequestID = exports.getRequestID = exports.generateUUID = exports.disableControls = exports.createLinkStyle = exports.decryptCipherData = exports.serializeParameters = exports.setupApplication = exports.startApplication = exports.confirmRevise = exports.confirmResend = exports.confirmExport = exports.confirmImport = exports.confirmRequest = exports.confirmReject = exports.confirmApprove = exports.confirmErase = exports.confirmReset = exports.confirmReceive = exports.confirmSaveAs = exports.confirmProcess = exports.confirmClear = exports.confirmUpdate = exports.confirmSend = exports.confirmRemove = exports.confirmCancel = exports.confirmSave = exports.confirmDelete = exports.confirmDialogBox = exports.confirmmsg = exports.alertmsg = exports.confirmDialog = exports.confirmbox = exports.alertDialog = exports.alertbox = exports.warningbox = exports.successbox = exports.detectErrorResponse = exports.parseErrorThrown = exports.submitFailure = exports.stopWaiting = exports.startWaiting = exports.openNewWindow = exports.submitWindow = exports.buildFormParams = exports.addWindow = exports.closeChildWindows = exports.getWindowByName = void 0;
 const jquery_1 = __importDefault(require("jquery"));
-const bootbox_1 = __importDefault(require("bootbox"));
+const bootbox_1 = __importDefault(require("../bootbox/bootbox"));
 const bootstrap_1 = require("bootstrap");
 const msg_util_1 = require("./msg.util");
 const messenger_1 = require("./messenger");
