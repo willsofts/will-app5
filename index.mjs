@@ -1,221 +1,14 @@
-"use strict";
-var __create = Object.create;
-var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __export = (target, all) => {
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
-};
-var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
-    for (let key of __getOwnPropNames(from))
-      if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
-  }
-  return to;
-};
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
-var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
-
-// src/index.ts
-var index_exports = {};
-__export(index_exports, {
-  ALPHABETS: () => ALPHABETS,
-  DEFAULT_CONTENT_TYPE: () => DEFAULT_CONTENT_TYPE,
-  DEFAULT_PAGE_SETTINGS: () => DEFAULT_PAGE_SETTINGS,
-  DEFAULT_PERMITS: () => DEFAULT_PERMITS,
-  DH: () => DH,
-  KnMask: () => KnMask,
-  NUMERICS: () => NUMERICS,
-  Paging: () => Paging,
-  Permission: () => Permission,
-  Utilities: () => Utilities,
-  addWindow: () => addWindow,
-  alertDialog: () => alertDialog,
-  alertbox: () => alertbox,
-  alertmsg: () => alertmsg,
-  appInit: () => appInit,
-  assignAppConfig: () => assignAppConfig,
-  bindingChildMessaging: () => bindingChildMessaging,
-  bindingParentMessaging: () => bindingParentMessaging,
-  bootbox: () => bootbox_default,
-  checkInputKey: () => checkInputKey,
-  checkInputNumberOnly: () => checkInputNumberOnly,
-  checkNumberOnly: () => checkNumberOnly,
-  clearCalendar: () => clearCalendar,
-  clearComma: () => clearComma,
-  closeChildWindows: () => closeChildWindows,
-  confirmApprove: () => confirmApprove,
-  confirmCancel: () => confirmCancel,
-  confirmClear: () => confirmClear,
-  confirmDelete: () => confirmDelete,
-  confirmDialog: () => confirmDialog,
-  confirmDialogBox: () => confirmDialogBox,
-  confirmErase: () => confirmErase,
-  confirmExport: () => confirmExport,
-  confirmImport: () => confirmImport,
-  confirmProcess: () => confirmProcess,
-  confirmReceive: () => confirmReceive,
-  confirmReject: () => confirmReject,
-  confirmRemove: () => confirmRemove,
-  confirmRequest: () => confirmRequest,
-  confirmResend: () => confirmResend,
-  confirmReset: () => confirmReset,
-  confirmRevise: () => confirmRevise,
-  confirmSave: () => confirmSave,
-  confirmSaveAs: () => confirmSaveAs,
-  confirmSend: () => confirmSend,
-  confirmUpdate: () => confirmUpdate,
-  confirmbox: () => confirmbox,
-  confirmmsg: () => confirmmsg,
-  createLinkStyle: () => createLinkStyle,
-  createNewPassword: () => createNewPassword,
-  decryptCipherData: () => decryptCipherData,
-  detectErrorResponse: () => detectErrorResponse,
-  disableControls: () => disableControls,
-  ensureTableSetting: () => ensureTableSetting,
-  fetchLabel: () => fetchLabel,
-  fetchMessageCode: () => fetchMessageCode,
-  formatDataTable: () => formatDataTable,
-  formatDecimal: () => formatDecimal,
-  formatFloating: () => formatFloating,
-  formatNumber: () => formatNumber,
-  generateUUID: () => generateUUID,
-  getAccessTokenKey: () => getAccessTokenKey,
-  getAccessorInfo: () => getAccessorInfo,
-  getAccessorToken: () => getAccessorToken,
-  getAlphabets: () => getAlphabets,
-  getApiLabel: () => getApiLabel,
-  getApiMessageCode: () => getApiMessageCode,
-  getApiToken: () => getApiToken,
-  getApiUrl: () => getApiUrl,
-  getAppInfo: () => getAppInfo,
-  getBaseCss: () => getBaseCss,
-  getBaseStorage: () => getBaseStorage,
-  getBaseUrl: () => getBaseUrl,
-  getCaretPosition: () => getCaretPosition,
-  getCdnUrl: () => getCdnUrl,
-  getChatUrl: () => getChatUrl,
-  getConfig: () => getConfig,
-  getControlClasses: () => getControlClasses,
-  getCurrentWindow: () => getCurrentWindow,
-  getDH: () => getDH,
-  getDefaultLabels: () => getDefaultLabels,
-  getDefaultLanguage: () => getDefaultLanguage,
-  getDefaultRawParameters: () => getDefaultRawParameters,
-  getDigits: () => getDigits,
-  getImgUrl: () => getImgUrl,
-  getLabel: () => getLabel,
-  getLabelItem: () => getLabelItem,
-  getLabelModel: () => getLabelModel,
-  getLabelObject: () => getLabelObject,
-  getMessageCode: () => getMessageCode,
-  getMetaInfo: () => getMetaInfo,
-  getMultiLanguages: () => getMultiLanguages,
-  getMultiLanguagesModel: () => getMultiLanguagesModel,
-  getPermitModel: () => getPermitModel,
-  getProgramLabels: () => getProgramLabels,
-  getProgramMessage: () => getProgramMessage,
-  getRandomNumber: () => getRandomNumber,
-  getRequestID: () => getRequestID,
-  getStorage: () => getStorage,
-  getTokenKey: () => getTokenKey,
-  getWindowByName: () => getWindowByName,
-  handleRequestMessage: () => handleRequestMessage,
-  indexOfAlphabets: () => indexOfAlphabets,
-  initAppConfig: () => initAppConfig,
-  initConfigure: () => initConfigure,
-  inputNumberOnly: () => inputNumberOnly,
-  isDigit: () => isDigit,
-  isLetter: () => isLetter,
-  isLowerCase: () => isLowerCase,
-  isSecureStorage: () => isSecureStorage,
-  isUpperCase: () => isUpperCase,
-  loadAndMergeLabel: () => loadAndMergeLabel,
-  loadAndMergeMessageCode: () => loadAndMergeMessageCode,
-  loadAndMergeProgramLabel: () => loadAndMergeProgramLabel,
-  loadAppConfig: () => loadAppConfig,
-  loadPermissions: () => loadPermissions,
-  mergeMessageCodes: () => mergeMessageCodes,
-  mergeProgramLabels: () => mergeProgramLabels,
-  openCalendar: () => openCalendar,
-  openNewWindow: () => openNewWindow,
-  parseErrorThrown: () => parseErrorThrown,
-  parseNumber: () => parseNumber,
-  putComma: () => putComma,
-  random: () => random,
-  randomNumber: () => randomNumber,
-  randomPassword: () => randomPassword,
-  randomize: () => randomize,
-  registerNotification: () => registerNotification,
-  removeAccessorInfo: () => removeAccessorInfo,
-  removeComma: () => removeComma,
-  removeDelimiter: () => removeDelimiter,
-  removeStorage: () => removeStorage,
-  replaceString: () => replaceString,
-  requestAccessorInfo: () => requestAccessorInfo,
-  resetRequestID: () => resetRequestID,
-  saveAccessorInfo: () => saveAccessorInfo,
-  sendMessageInterface: () => sendMessageInterface,
-  sendMessageToFrame: () => sendMessageToFrame,
-  sendMessageToOpener: () => sendMessageToOpener,
-  sendMessageToParent: () => sendMessageToParent,
-  serializeParameters: () => serializeParameters,
-  setApiToken: () => setApiToken,
-  setApiUrl: () => setApiUrl,
-  setBaseCss: () => setBaseCss,
-  setBaseStorage: () => setBaseStorage,
-  setBaseUrl: () => setBaseUrl,
-  setCaretPosition: () => setCaretPosition,
-  setCdnUrl: () => setCdnUrl,
-  setChatUrl: () => setChatUrl,
-  setCurrentWindow: () => setCurrentWindow,
-  setDefaultLabels: () => setDefaultLabels,
-  setDefaultLanguage: () => setDefaultLanguage,
-  setDefaultRawParameters: () => setDefaultRawParameters,
-  setImgUrl: () => setImgUrl,
-  setMessagingCallback: () => setMessagingCallback,
-  setMetaInfo: () => setMetaInfo,
-  setMultiLanguages: () => setMultiLanguages,
-  setProgramLabels: () => setProgramLabels,
-  setProgramMessage: () => setProgramMessage,
-  setSecureStorage: () => setSecureStorage,
-  setStorage: () => setStorage,
-  setTokenKey: () => setTokenKey,
-  setupApplication: () => setupApplication,
-  setupDiffie: () => setupDiffie,
-  startApplication: () => startApplication,
-  startWaiting: () => startWaiting,
-  stopWaiting: () => stopWaiting,
-  submitFailure: () => submitFailure,
-  submitWindow: () => submitWindow,
-  successbox: () => successbox,
-  triggerInput: () => triggerInput,
-  warningbox: () => warningbox
-});
-module.exports = __toCommonJS(index_exports);
-
 // src/app/app.util.ts
-var import_jquery3 = __toESM(require("jquery"));
+import $3 from "jquery";
 
 // src/bootbox/bootbox.ts
-var import_bootstrap = require("bootstrap");
-var import_jquery = __toESM(require("jquery"));
+import { Modal } from "bootstrap";
+import $ from "jquery";
 function init() {
   "use strict";
-  let exports2 = {};
+  let exports = {};
   let VERSION = "6.0.0";
-  exports2.VERSION = VERSION;
+  exports.VERSION = VERSION;
   let locales = {
     "en": {
       OK: "OK",
@@ -284,11 +77,11 @@ function init() {
     // A unique indentifier for this modal
     id: null
   };
-  exports2.locales = function(name) {
+  exports.locales = function(name) {
     return name ? locales[name] : locales;
   };
-  exports2.addLocale = function(name, values) {
-    import_jquery.default.each(["OK", "CANCEL", "CONFIRM"], function(_, v) {
+  exports.addLocale = function(name, values) {
+    $.each(["OK", "CANCEL", "CONFIRM"], function(_, v) {
       if (!values[v]) {
         throw new Error('Please supply a translation for "' + v + '"');
       }
@@ -298,40 +91,40 @@ function init() {
       CANCEL: values.CANCEL,
       CONFIRM: values.CONFIRM
     };
-    return exports2;
+    return exports;
   };
-  exports2.removeLocale = function(name) {
+  exports.removeLocale = function(name) {
     if (name !== "en") {
       delete locales[name];
     } else {
       throw new Error('"en" is used as the default and fallback locale and cannot be removed.');
     }
-    return exports2;
+    return exports;
   };
-  exports2.setLocale = function(name) {
-    return exports2.setDefaults("locale", name);
+  exports.setLocale = function(name) {
+    return exports.setDefaults("locale", name);
   };
-  exports2.setDefaults = function() {
+  exports.setDefaults = function() {
     let values = {};
     if (arguments.length === 2) {
       values[arguments[0]] = arguments[1];
     } else {
       values = arguments[0];
     }
-    import_jquery.default.extend(defaults, values);
-    return exports2;
+    $.extend(defaults, values);
+    return exports;
   };
-  exports2.hideAll = function() {
-    let dialog = new import_bootstrap.Modal((0, import_jquery.default)(".bootbox").get(0));
+  exports.hideAll = function() {
+    let dialog = new Modal($(".bootbox").get(0));
     dialog.hide();
-    return exports2;
+    return exports;
   };
-  exports2.init = function() {
+  exports.init = function() {
     return init();
   };
-  exports2.dialog = function(options) {
+  exports.dialog = function(options) {
     options = sanitize(options);
-    let modal = import_jquery.default.fn.modal;
+    let modal = $.fn.modal;
     if (modal && modal.Constructor.VERSION) {
       options.fullBootstrapVersion = modal.Constructor.VERSION;
       let i = options.fullBootstrapVersion.indexOf(".");
@@ -340,11 +133,11 @@ function init() {
       options.bootstrap = "5";
       options.fullBootstrapVersion = "5.1.3";
     }
-    let dialog = (0, import_jquery.default)(templates.dialog);
+    let dialog = $(templates.dialog);
     let innerDialog = dialog.find(".modal-dialog");
     let body = dialog.find(".modal-body");
-    let header = (0, import_jquery.default)(templates.header);
-    let footer = (0, import_jquery.default)(templates.footer);
+    let header = $(templates.header);
+    let footer = $(templates.footer);
     let buttons = options.buttons;
     let callbacks = {
       onEscape: options.onEscape
@@ -352,7 +145,7 @@ function init() {
     body.find(".bootbox-body").html(options.message);
     if (getKeyLength(options.buttons) > 0) {
       each(buttons, function(key, b) {
-        let button = (0, import_jquery.default)(templates.button);
+        let button = $(templates.button);
         button.data("bb-handler", key);
         button.addClass(b.className);
         switch (key) {
@@ -420,7 +213,7 @@ function init() {
         header.addClass("border-0");
       }
       if (options.closeButton) {
-        let closeButton = (0, import_jquery.default)(templates.closeButton);
+        let closeButton = $(templates.closeButton);
         if (options.bootstrap < 5) {
           closeButton.html("&times;");
         }
@@ -490,7 +283,7 @@ function init() {
       }
     });
     dialog.on("click", ".modal-footer button:not(.disabled)", function(e) {
-      let callbackKey = (0, import_jquery.default)(this).data("bb-handler");
+      let callbackKey = $(this).data("bb-handler");
       if (callbackKey !== void 0) {
         processCallback(e, dialog, callbacks[callbackKey]);
       }
@@ -503,8 +296,8 @@ function init() {
         dialog.trigger("escape.close.bb");
       }
     });
-    (0, import_jquery.default)(options.container).append(dialog);
-    let mdialog = new import_bootstrap.Modal(dialog.get(0), {
+    $(options.container).append(dialog);
+    let mdialog = new Modal(dialog.get(0), {
       backdrop: options.backdrop,
       keyboard: false
       //show: false
@@ -515,7 +308,7 @@ function init() {
     dialog.data("modal-dialog", mdialog);
     return dialog;
   };
-  exports2.alert = function() {
+  exports.alert = function() {
     let options;
     options = mergeDialogOptions("alert", ["ok"], ["message", "callback"], arguments);
     if (options.callback && typeof options.callback !== "function") {
@@ -527,9 +320,9 @@ function init() {
       }
       return true;
     };
-    return exports2.dialog(options);
+    return exports.dialog(options);
   };
-  exports2.confirm = function() {
+  exports.confirm = function() {
     let options;
     options = mergeDialogOptions("confirm", ["cancel", "confirm"], ["message", "callback"], arguments);
     if (typeof options.callback !== "function") {
@@ -541,16 +334,16 @@ function init() {
     options.buttons.confirm.callback = function() {
       return options.callback.call(this, true);
     };
-    return exports2.dialog(options);
+    return exports.dialog(options);
   };
-  exports2.prompt = function() {
+  exports.prompt = function() {
     let options;
     let promptDialog;
     let form;
     let input;
     let shouldShow;
     let inputOptions;
-    form = (0, import_jquery.default)(templates.form);
+    form = $(templates.form);
     options = mergeDialogOptions("prompt", ["cancel", "confirm"], ["title", "callback"], arguments);
     if (!options.value) {
       options.value = defaults.value;
@@ -567,7 +360,7 @@ function init() {
       let value;
       if (options.inputType === "checkbox") {
         value = input.find("input:checked").map(function(item) {
-          return (0, import_jquery.default)(item).val();
+          return $(item).val();
         }).get();
       } else if (options.inputType === "radio") {
         value = input.find("input:checked").val();
@@ -587,7 +380,7 @@ function init() {
         } else {
           if (options.inputType === "select" && options.multiple === true) {
             value = input.find("option:selected").map(function(item) {
-              return (0, import_jquery.default)(item).val();
+              return $(item).val();
             }).get();
           } else {
             value = input.val();
@@ -605,7 +398,7 @@ function init() {
     if (!templates.inputs[options.inputType]) {
       throw new Error("Invalid prompt type");
     }
-    input = (0, import_jquery.default)(templates.inputs[options.inputType]);
+    input = $(templates.inputs[options.inputType]);
     switch (options.inputType) {
       case "text":
       case "textarea":
@@ -690,11 +483,11 @@ function init() {
           }
           if (option.group) {
             if (!groups[option.group]) {
-              groups[option.group] = (0, import_jquery.default)("<optgroup />").attr("label", option.group);
+              groups[option.group] = $("<optgroup />").attr("label", option.group);
             }
             elem = groups[option.group];
           }
-          let o = (0, import_jquery.default)(templates.option);
+          let o = $(templates.option);
           o.attr("value", option.value).text(option.text);
           elem.append(o);
         });
@@ -712,12 +505,12 @@ function init() {
         if (!inputOptions.length) {
           throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');
         }
-        input = (0, import_jquery.default)('<div class="bootbox-checkbox-list"></div>');
+        input = $('<div class="bootbox-checkbox-list"></div>');
         each(inputOptions, function(_, option) {
           if (option.value === void 0 || option.text === void 0) {
             throw new Error('each option needs a "value" property and a "text" property');
           }
-          let checkbox = (0, import_jquery.default)(templates.inputs[options.inputType]);
+          let checkbox = $(templates.inputs[options.inputType]);
           checkbox.find("input").attr("value", option.value);
           checkbox.find("label").append("\n" + option.text);
           each(checkboxValues, function(_2, value) {
@@ -736,13 +529,13 @@ function init() {
         if (!inputOptions.length) {
           throw new Error('prompt with "inputType" set to "radio" requires at least one option');
         }
-        input = (0, import_jquery.default)('<div class="bootbox-radiobutton-list"></div>');
+        input = $('<div class="bootbox-radiobutton-list"></div>');
         var checkFirstRadio = true;
         each(inputOptions, function(_, option) {
           if (option.value === void 0 || option.text === void 0) {
             throw new Error('each option needs a "value" property and a "text" property');
           }
-          let radio = (0, import_jquery.default)(templates.inputs[options.inputType]);
+          let radio = $(templates.inputs[options.inputType]);
           radio.find("input").attr("value", option.value);
           radio.find("label").append("\n" + option.text);
           if (options.value !== void 0) {
@@ -765,13 +558,13 @@ function init() {
       promptDialog.find(".bootbox-accept").trigger("click");
     });
     if (options.message && options.message.trim() !== "") {
-      let message = (0, import_jquery.default)(templates.promptMessage).html(options.message);
+      let message = $(templates.promptMessage).html(options.message);
       form.prepend(message);
       options.message = form;
     } else {
       options.message = form;
     }
-    promptDialog = exports2.dialog(options);
+    promptDialog = exports.dialog(options);
     promptDialog.off("shown.bs.modal", focusPrimaryButton);
     promptDialog.on("shown.bs.modal", function() {
       input.focus();
@@ -780,7 +573,7 @@ function init() {
       input.trigger("focus");
     });
     if (shouldShow === true) {
-      let mdialog = new import_bootstrap.Modal(promptDialog.get(0));
+      let mdialog = new Modal(promptDialog.get(0));
       mdialog.show();
     }
     return promptDialog;
@@ -800,7 +593,7 @@ function init() {
     return options;
   }
   function mergeArguments(defaults2, args, properties) {
-    return import_jquery.default.extend(
+    return $.extend(
       // Deep merge
       true,
       // Ensure the target is an empty, unreferenced object
@@ -872,7 +665,7 @@ function init() {
     if (!options.message) {
       throw new Error('"message" option must not be null or an empty string.');
     }
-    options = import_jquery.default.extend({}, defaults, options);
+    options = $.extend({}, defaults, options);
     if (!options.backdrop) {
       options.backdrop = options.backdrop === false || options.backdrop === 0 ? false : "static";
     } else {
@@ -916,7 +709,7 @@ function init() {
   }
   function each(collection, iterator) {
     let index = 0;
-    import_jquery.default.each(collection, function(key, value) {
+    $.each(collection, function(key, value) {
       iterator(key, value, index++);
     });
   }
@@ -948,7 +741,7 @@ function init() {
     let preserveDialog = typeof callback === "function" && callback.call(dialog, e) === false;
     if (!preserveDialog) {
       let mdialog = dialog.data("modal-dialog");
-      if (!mdialog) mdialog = new import_bootstrap.Modal(dialog.get(0));
+      if (!mdialog) mdialog = new Modal(dialog.get(0));
       mdialog.hide();
     }
   }
@@ -993,15 +786,15 @@ function init() {
   function dateIsValid(value) {
     return /(\d{4})-(\d{2})-(\d{2})/.test(value);
   }
-  return exports2;
+  return exports;
 }
 var bootbox_default = init();
 
 // src/app/app.util.ts
-var import_bootstrap2 = require("bootstrap");
+import { Modal as Modal2 } from "bootstrap";
 
 // src/app/msg.util.ts
-var import_jquery2 = __toESM(require("jquery"));
+import $2 from "jquery";
 function getMessageCode(errcode, params, defaultMessage) {
   if (errcode && errcode.trim().length > 0) {
     let program_message2 = getProgramMessage();
@@ -1064,7 +857,7 @@ function loadAndMergeMessageCode(callback, loadMessageCode = String(getMetaInfo(
 function fetchMessageCode(code, callback, url = getApiMessageCode()) {
   console.log("fetchMessageCode: ", code);
   let authtoken = getAccessorToken();
-  import_jquery2.default.ajax({
+  $2.ajax({
     url,
     type: "POST",
     data: code ? JSON.stringify({ msgcode: code }) : "",
@@ -1114,21 +907,21 @@ function buildFormParams(frm, params) {
     let prms = params.split("&");
     for (let prm of prms) {
       let kary = prm.split("=");
-      let inp = (0, import_jquery3.default)('<input type="hidden" name="' + kary[0] + '"></input>');
+      let inp = $3('<input type="hidden" name="' + kary[0] + '"></input>');
       inp.val(kary[1]);
       frm.append(inp);
     }
   } else if (Array.isArray(params)) {
     for (let prm of params) {
       if (prm.name) {
-        let inp = (0, import_jquery3.default)('<input type="hidden" name="' + prm.name + '"></input>');
+        let inp = $3('<input type="hidden" name="' + prm.name + '"></input>');
         inp.val(prm.value);
         frm.append(inp);
       }
     }
   } else if (params) {
     for (let prm in params) {
-      let inp = (0, import_jquery3.default)('<input type="hidden" name="' + prm + '"></input>');
+      let inp = $3('<input type="hidden" name="' + prm + '"></input>');
       inp.val(params[prm]);
       frm.append(inp);
     }
@@ -1138,13 +931,13 @@ function submitWindow(settings) {
   let p = settings;
   if (p.url && p.url != "" && p.params) {
     let method = p.method || "POST";
-    let frm = (0, import_jquery3.default)("<form method='" + method + "'></form>");
+    let frm = $3("<form method='" + method + "'></form>");
     frm.attr("action", p.url);
     frm.attr("target", p.windowName);
     buildFormParams(frm, p.params);
-    let layer = (0, import_jquery3.default)("<div class='open-new-window-submit-layer'></div>");
+    let layer = $3("<div class='open-new-window-submit-layer'></div>");
     layer.append(frm);
-    (0, import_jquery3.default)("body").append(layer);
+    $3("body").append(layer);
     frm.trigger("submit");
     setTimeout(function() {
       layer.remove();
@@ -1197,9 +990,9 @@ function openNewWindow(settings) {
 }
 function startWaiting() {
   try {
-    let dc = (0, import_jquery3.default)(document.body);
+    let dc = $3(document.body);
     let sh = dc.innerHeight();
-    let fslayer = (0, import_jquery3.default)("#fswaitlayer");
+    let fslayer = $3("#fswaitlayer");
     let lh = fslayer.height();
     let fstop = mouseY;
     if (lh !== void 0 && sh !== void 0) {
@@ -1214,7 +1007,7 @@ function startWaiting() {
   }
 }
 function stopWaiting() {
-  (0, import_jquery3.default)("#fswaitlayer").hide();
+  $3("#fswaitlayer").hide();
 }
 function submitFailure(xhr, status, errorThrown, checking = true) {
   stopWaiting();
@@ -1303,7 +1096,7 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
         ok: { label: fs_okbtn }
       }
     });
-    let dialog = (0, import_jquery3.default)(".bootbox > .modal-dialog");
+    let dialog = $3(".bootbox > .modal-dialog");
     dialog.draggable();
     return;
   } catch (ex) {
@@ -1346,7 +1139,7 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
         cancel: { label: fs_cancelbtn }
       }
     });
-    let dialog = (0, import_jquery3.default)(".bootbox > .modal-dialog");
+    let dialog = $3(".bootbox > .modal-dialog");
     dialog.draggable();
   } catch (ex) {
     console.error(ex);
@@ -1423,11 +1216,11 @@ var mouseX = 0;
 var mouseY = 0;
 function startApplication(pid, callback) {
   console.log("startApplication: pid=" + pid);
-  (0, import_jquery3.default)(document).on("mousedown", function(e) {
+  $3(document).on("mousedown", function(e) {
     mouseX = e.pageX;
     mouseY = e.pageY;
   });
-  (0, import_jquery3.default)(globalThis).on("beforeunload", function(e) {
+  $3(globalThis).on("beforeunload", function(e) {
     if (fs_winary.length > 0) {
       e.preventDefault();
       e.returnValue = "";
@@ -1436,7 +1229,7 @@ function startApplication(pid, callback) {
   }).on("unload", function() {
     closeChildWindows();
   });
-  let modal = import_jquery3.default?.fn?.modal;
+  let modal = $3?.fn?.modal;
   if (!modal) modal = globalThis.jQuery?.fn?.modal;
   if (modal) {
     try {
@@ -1447,8 +1240,8 @@ function startApplication(pid, callback) {
     }
   }
   try {
-    import_bootstrap2.Modal.Default.backdrop = "static";
-    import_bootstrap2.Modal.Default.keyboard = false;
+    Modal2.Default.backdrop = "static";
+    Modal2.Default.keyboard = false;
   } catch (ex) {
     console.error(ex);
   }
@@ -1520,8 +1313,8 @@ function createLinkStyle(css_url) {
   }
 }
 function disableControls() {
-  (0, import_jquery3.default)(arguments).each(function(index, element) {
-    let $src = (0, import_jquery3.default)(element);
+  $3(arguments).each(function(index, element) {
+    let $src = $3(element);
     $src.attr("disabled", "true");
     setTimeout(function() {
       $src.removeAttr("disabled");
@@ -1557,9 +1350,9 @@ function randomize() {
 }
 
 // src/app/dh.ts
-var import_jquery4 = __toESM(require("jquery"));
-var import_crypto_js = __toESM(require("crypto-js"));
-var import_bigi = __toESM(require("bigi"));
+import $4 from "jquery";
+import CryptoJS from "crypto-js";
+import BigInteger from "bigi";
 var getPrimes = function(min, max) {
   const isPrime = new Array(max + 1).fill(true);
   isPrime[0] = isPrime[1] = false;
@@ -1604,42 +1397,42 @@ var DH = class {
     this.otherPublicKey = "" + getPrimeNumber();
   }
   encryptText(word, keyBase64) {
-    let key = import_crypto_js.default.enc.Base64.parse(keyBase64);
-    let srcs = import_crypto_js.default.enc.Utf8.parse(word);
-    let encrypted = import_crypto_js.default.AES.encrypt(srcs, key, { mode: import_crypto_js.default.mode.ECB, padding: import_crypto_js.default.pad.Pkcs7 });
+    let key = CryptoJS.enc.Base64.parse(keyBase64);
+    let srcs = CryptoJS.enc.Utf8.parse(word);
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
     return encrypted.toString();
   }
   decryptText(word, keyBase64) {
-    let key = import_crypto_js.default.enc.Base64.parse(keyBase64);
-    let decrypt = import_crypto_js.default.AES.decrypt(word, key, { mode: import_crypto_js.default.mode.ECB, padding: import_crypto_js.default.pad.Pkcs7 });
-    return import_crypto_js.default.enc.Utf8.stringify(decrypt).toString();
+    let key = CryptoJS.enc.Base64.parse(keyBase64);
+    let decrypt = CryptoJS.AES.decrypt(word, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+    return CryptoJS.enc.Utf8.stringify(decrypt).toString();
   }
   encrypt(word) {
-    let hash = import_crypto_js.default.SHA256(this.sharedKey);
-    let keyBase64 = hash.toString(import_crypto_js.default.enc.Base64);
-    let key = import_crypto_js.default.enc.Base64.parse(keyBase64);
-    let srcs = import_crypto_js.default.enc.Utf8.parse(word);
-    let encrypted = import_crypto_js.default.AES.encrypt(srcs, key, { mode: import_crypto_js.default.mode.ECB, padding: import_crypto_js.default.pad.Pkcs7 });
+    let hash = CryptoJS.SHA256(this.sharedKey);
+    let keyBase64 = hash.toString(CryptoJS.enc.Base64);
+    let key = CryptoJS.enc.Base64.parse(keyBase64);
+    let srcs = CryptoJS.enc.Utf8.parse(word);
+    let encrypted = CryptoJS.AES.encrypt(srcs, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
     return encrypted.toString();
   }
   decrypt(word) {
-    let hash = import_crypto_js.default.SHA256(this.sharedKey);
-    let keyBase64 = hash.toString(import_crypto_js.default.enc.Base64);
-    let key = import_crypto_js.default.enc.Base64.parse(keyBase64);
-    let decrypt = import_crypto_js.default.AES.decrypt(word, key, { mode: import_crypto_js.default.mode.ECB, padding: import_crypto_js.default.pad.Pkcs7 });
-    return import_crypto_js.default.enc.Utf8.stringify(decrypt).toString();
+    let hash = CryptoJS.SHA256(this.sharedKey);
+    let keyBase64 = hash.toString(CryptoJS.enc.Base64);
+    let key = CryptoJS.enc.Base64.parse(keyBase64);
+    let decrypt = CryptoJS.AES.decrypt(word, key, { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+    return CryptoJS.enc.Utf8.stringify(decrypt).toString();
   }
   computePublicKey() {
-    let G = new import_bigi.default(this.generator, void 0, void 0);
-    let P = new import_bigi.default(this.prime, void 0, void 0);
-    let a = new import_bigi.default(this.privateKey, void 0, void 0);
+    let G = new BigInteger(this.generator, void 0, void 0);
+    let P = new BigInteger(this.prime, void 0, void 0);
+    let a = new BigInteger(this.privateKey, void 0, void 0);
     let ap = G.modPowInt(a, P);
     this.publicKey = ap.toString();
   }
   computeSharedKey() {
-    let P = new import_bigi.default(this.prime, void 0, void 0);
-    let a = new import_bigi.default(this.privateKey, void 0, void 0);
-    let bp = new import_bigi.default(this.otherPublicKey, void 0, void 0);
+    let P = new BigInteger(this.prime, void 0, void 0);
+    let a = new BigInteger(this.privateKey, void 0, void 0);
+    let bp = new BigInteger(this.otherPublicKey, void 0, void 0);
     let ashare = bp.modPowInt(a, P);
     this.sharedKey = ashare.toString();
   }
@@ -1667,7 +1460,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/dh";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    $4.ajax({
       url: aurl,
       type: "POST",
       dataType: "json",
@@ -1695,7 +1488,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/dh";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    $4.ajax({
       url: aurl,
       type: "POST",
       data: {
@@ -1718,7 +1511,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/update";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    $4.ajax({
       url: aurl,
       type: "POST",
       data: {
@@ -1740,13 +1533,13 @@ var DH = class {
 };
 
 // src/app/messenger.ts
-var import_secure_ls = __toESM(require("secure-ls"));
+import SecureLS from "secure-ls";
 var messagingCallback;
 var currentWindow;
 var secureEngine;
 function getSecureEngine() {
   if (!secureEngine) {
-    secureEngine = isSecureStorage() ? new import_secure_ls.default({ storage: "local" == getBaseStorage() ? localStorage : sessionStorage }) : null;
+    secureEngine = isSecureStorage() ? new SecureLS({ storage: "local" == getBaseStorage() ? localStorage : sessionStorage }) : null;
   }
   return secureEngine;
 }
@@ -2239,7 +2032,7 @@ function initAppConfig(callback) {
 }
 
 // src/app/ctrl.util.ts
-var import_jquery5 = __toESM(require("jquery"));
+import $5 from "jquery";
 
 // src/app/Utilities.ts
 var Utilities = class {
@@ -2773,7 +2566,7 @@ function getControlClasses(attrClass, ...classes) {
   return ctrlClasses;
 }
 function clearCalendar(src) {
-  let dpkr = (0, import_jquery5.default)(src);
+  let dpkr = $5(src);
   if (dpkr.is(":disabled")) return;
   if (dpkr.is("[readonly]")) {
     let edit = dpkr.attr("editable");
@@ -2785,7 +2578,7 @@ function clearCalendar(src) {
   if (ifn) ifn("", dpkr);
 }
 function openCalendar(src) {
-  let dpkr = (0, import_jquery5.default)(src);
+  let dpkr = $5(src);
   if (dpkr.is(":disabled")) return;
   if (dpkr.is("[readonly]")) {
     let edit = dpkr.attr("editable");
@@ -2807,7 +2600,7 @@ function openCalendar(src) {
       }
     });
     picker.datepicker("show");
-    (0, import_jquery5.default)(document).off("focusin");
+    $5(document).off("focusin");
     return;
   } catch (ex) {
     console.error(ex);
@@ -3279,7 +3072,7 @@ var KnMask = class _KnMask {
 };
 
 // src/app/label.util.ts
-var import_jquery6 = __toESM(require("jquery"));
+import $6 from "jquery";
 function getLabel(name, defaultLabel, lang = getDefaultLanguage()) {
   let result = void 0;
   let default_labels2 = getDefaultLabels();
@@ -3386,7 +3179,7 @@ function loadAndMergeProgramLabel(id, callback, loadLabel = String(getMetaInfo()
 function fetchLabel(id, callback, url = getApiLabel()) {
   console.log("fetchLabel:", id);
   let authtoken = getAccessorToken();
-  import_jquery6.default.ajax({
+  $6.ajax({
     url,
     type: "POST",
     data: JSON.stringify({ labelid: id }),
@@ -3633,8 +3426,7 @@ function random(len = 6, alphabets = ALPHABETS) {
 function randomNumber(len = 6, alphabets = NUMERICS) {
   return random(len, alphabets);
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
+export {
   ALPHABETS,
   DEFAULT_CONTENT_TYPE,
   DEFAULT_PAGE_SETTINGS,
@@ -3653,7 +3445,7 @@ function randomNumber(len = 6, alphabets = NUMERICS) {
   assignAppConfig,
   bindingChildMessaging,
   bindingParentMessaging,
-  bootbox,
+  bootbox_default as bootbox,
   checkInputKey,
   checkInputNumberOnly,
   checkNumberOnly,
@@ -3807,7 +3599,7 @@ function randomNumber(len = 6, alphabets = NUMERICS) {
   successbox,
   triggerInput,
   warningbox
-});
+};
 /*! @preserve
  * bootbox.js
  * version: 6.0.0

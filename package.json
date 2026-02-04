@@ -1,10 +1,18 @@
 {
   "name": "@willsofts/will-app5",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Program Utility Function",
   "main": "index.js",
+  "module": "index.mjs",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.js"
+    }
+  },
   "scripts": {
-    "build": "tsc --project ./",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean",
+    "buildts": "tsc --project ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -29,7 +37,8 @@
     "@types/node": "^18.11.5",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.8.4"
+    "tsup": "^8.5.1",
+    "typescript": "^5.7.2"
   },
   "engines": {
     "node": ">=20"
