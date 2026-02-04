@@ -1352,7 +1352,6 @@ function randomize() {
 // src/app/dh.ts
 import $4 from "jquery";
 import CryptoJS from "crypto-js";
-import BigInteger from "bigi";
 var getPrimes = function(min, max) {
   const isPrime = new Array(max + 1).fill(true);
   isPrime[0] = isPrime[1] = false;
@@ -1381,6 +1380,18 @@ var getRandomPrime = function(min, max) {
 var getPrimeNumber = function() {
   return getRandomPrime(1e3, 1e4);
 };
+function modPowInt(base, exp, mod) {
+  let result = 1n;
+  base = base % mod;
+  while (exp > 0n) {
+    if (exp % 2n === 1n) {
+      result = result * base % mod;
+    }
+    exp >>= 1n;
+    base = base * base % mod;
+  }
+  return result;
+}
 var DH = class {
   prime;
   generator;
@@ -1423,17 +1434,17 @@ var DH = class {
     return CryptoJS.enc.Utf8.stringify(decrypt).toString();
   }
   computePublicKey() {
-    let G = new BigInteger(this.generator, void 0, void 0);
-    let P = new BigInteger(this.prime, void 0, void 0);
-    let a = new BigInteger(this.privateKey, void 0, void 0);
-    let ap = G.modPowInt(a, P);
+    let G = BigInt(this.generator);
+    let P = BigInt(this.prime);
+    let a = BigInt(this.privateKey);
+    let ap = modPowInt(G, a, P);
     this.publicKey = ap.toString();
   }
   computeSharedKey() {
-    let P = new BigInteger(this.prime, void 0, void 0);
-    let a = new BigInteger(this.privateKey, void 0, void 0);
-    let bp = new BigInteger(this.otherPublicKey, void 0, void 0);
-    let ashare = bp.modPowInt(a, P);
+    let P = BigInt(this.prime);
+    let a = BigInt(this.privateKey);
+    let bp = BigInt(this.otherPublicKey);
+    let ashare = modPowInt(bp, a, P);
     this.sharedKey = ashare.toString();
   }
   compute() {
