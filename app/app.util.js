@@ -353,117 +353,79 @@ function confirmDialogBox(errcode, params, defaultmsg, okFn, cancelFn, addonmsg)
 }
 exports.confirmDialogBox = confirmDialogBox;
 function confirmDelete(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0001", params, "Do you want to delete this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0001", params, "Do you want to delete this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmDelete = confirmDelete;
 function confirmSave(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0002", null, "Do you want to save this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0002", null, "Do you want to save this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmSave = confirmSave;
 function confirmCancel(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0003", null, "Do you want to cancel this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0003", null, "Do you want to cancel this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmCancel = confirmCancel;
 function confirmRemove(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0005", params, "Do you want to delete this record?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0005", params, "Do you want to delete this record?", okFn, cancelFn, addonmsg);
 }
 exports.confirmRemove = confirmRemove;
 function confirmSend(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0006", null, "Do you want to send this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0006", null, "Do you want to send this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmSend = confirmSend;
 function confirmUpdate(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0007", null, "Do you want to update this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0007", null, "Do you want to update this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmUpdate = confirmUpdate;
 function confirmClear(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0008", params, "Do you want to clear this?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0008", params, "Do you want to clear this?", okFn, cancelFn, addonmsg);
 }
 exports.confirmClear = confirmClear;
 function confirmProcess(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0009", null, "Do you want to process this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0009", null, "Do you want to process this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmProcess = confirmProcess;
 function confirmSaveAs(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0010", null, "Do you want to save as this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0010", null, "Do you want to save as this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmSaveAs = confirmSaveAs;
 function confirmReceive(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0011", null, "Do you want to receive this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0011", null, "Do you want to receive this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmReceive = confirmReceive;
 function confirmReset(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0012", null, "Do you want to reset this trasaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0012", null, "Do you want to reset this trasaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmReset = confirmReset;
 function confirmErase(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0013", params, "Do you want to delete %s row(s)?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0013", params, "Do you want to delete %s row(s)?", okFn, cancelFn, addonmsg);
 }
 exports.confirmErase = confirmErase;
 function confirmApprove(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0014", params, "Do you want to confirm approve the %s request?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0014", params, "Do you want to confirm approve the %s request?", okFn, cancelFn, addonmsg);
 }
 exports.confirmApprove = confirmApprove;
 function confirmReject(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0015", params, "Do you want to reject %s?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0015", params, "Do you want to reject %s?", okFn, cancelFn, addonmsg);
 }
 exports.confirmReject = confirmReject;
 function confirmRequest(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0016", null, "Do you want to create this request?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0016", null, "Do you want to create this request?", okFn, cancelFn, addonmsg);
 }
 exports.confirmRequest = confirmRequest;
 function confirmImport(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0017", null, "Do you want to import this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0017", null, "Do you want to import this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmImport = confirmImport;
 function confirmExport(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0018", null, "Do you want to export this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0018", null, "Do you want to export this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmExport = confirmExport;
 function confirmResend(okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0019", null, "Do you want to resend this transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0019", null, "Do you want to resend this transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmResend = confirmResend;
 function confirmRevise(params, okFn, cancelFn, addonmsg) {
-    if (!confirmDialogBox("QS0020", params, "Do you want to revise the transaction?", okFn, cancelFn, addonmsg))
-        return false;
-    return true;
+    return confirmDialogBox("QS0020", params, "Do you want to revise the transaction?", okFn, cancelFn, addonmsg);
 }
 exports.confirmRevise = confirmRevise;
 let mouseX = 0;
