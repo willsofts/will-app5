@@ -1,12 +1,6 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.formatDataTable = exports.ensureTableSetting = exports.formatDecimal = exports.formatFloating = exports.removeDelimiter = exports.removeComma = exports.parseNumber = exports.setCaretPosition = exports.getCaretPosition = exports.clearComma = exports.putComma = exports.formatNumber = exports.cleasingValues = exports.checkInputKey = exports.checkInputNumberOnly = exports.inputNumberOnly = exports.triggerInput = exports.openCalendar = exports.clearCalendar = exports.getControlClasses = void 0;
-const jquery_1 = __importDefault(require("jquery"));
-const Utilities_1 = require("./Utilities");
-function getControlClasses(attrClass, ...classes) {
+import $ from "jquery";
+import { Utilities } from "./Utilities";
+export function getControlClasses(attrClass, ...classes) {
     let ctrlClasses = "";
     if (!attrClass)
         attrClass = "";
@@ -16,9 +10,8 @@ function getControlClasses(attrClass, ...classes) {
     }
     return ctrlClasses;
 }
-exports.getControlClasses = getControlClasses;
-function clearCalendar(src) {
-    let dpkr = (0, jquery_1.default)(src);
+export function clearCalendar(src) {
+    let dpkr = $(src);
     if (dpkr.is(":disabled"))
         return;
     if (dpkr.is("[readonly]")) {
@@ -32,9 +25,8 @@ function clearCalendar(src) {
     if (ifn)
         ifn("", dpkr);
 }
-exports.clearCalendar = clearCalendar;
-function openCalendar(src) {
-    let dpkr = (0, jquery_1.default)(src);
+export function openCalendar(src) {
+    let dpkr = $(src);
     if (dpkr.is(":disabled"))
         return;
     if (dpkr.is("[readonly]")) {
@@ -59,19 +51,17 @@ function openCalendar(src) {
             }
         });
         picker.datepicker("show");
-        (0, jquery_1.default)(document).off('focusin');
+        $(document).off('focusin');
         return;
     }
     catch (ex) {
         console.error(ex);
     }
 }
-exports.openCalendar = openCalendar;
-function triggerInput(input) {
+export function triggerInput(input) {
     input.dispatchEvent(new Event('input', { bubbles: true }));
 }
-exports.triggerInput = triggerInput;
-function inputNumberOnly(myfield, e, decimal, isPlus) {
+export function inputNumberOnly(myfield, e, decimal, isPlus) {
     let key;
     if (e)
         key = e.which;
@@ -100,8 +90,7 @@ function inputNumberOnly(myfield, e, decimal, isPlus) {
     else
         return false;
 }
-exports.inputNumberOnly = inputNumberOnly;
-function checkInputNumberOnly(myfield, e, decimal, isPlus) {
+export function checkInputNumberOnly(myfield, e, decimal, isPlus) {
     let iskeyup = myfield.getAttribute('keyup');
     if (iskeyup === "false") {
         return false;
@@ -109,8 +98,7 @@ function checkInputNumberOnly(myfield, e, decimal, isPlus) {
     myfield.setAttribute('keyup', "false");
     return inputNumberOnly(myfield, e, decimal, isPlus);
 }
-exports.checkInputNumberOnly = checkInputNumberOnly;
-function checkInputKey(myfield, event, decimal, maxvalue) {
+export function checkInputKey(myfield, event, decimal, maxvalue) {
     let iNum = event.keyCode;
     if (((iNum >= 48) && (iNum <= 57)) || ((iNum >= 96) && (iNum <= 105)) || iNum == 109 || iNum == 110 || iNum == 189 || iNum == 190) {
         myfield.setAttribute('keyup', true);
@@ -122,8 +110,7 @@ function checkInputKey(myfield, event, decimal, maxvalue) {
         triggerInput(myfield);
     }
 }
-exports.checkInputKey = checkInputKey;
-function cleasingValues(element, valueBfChange, fraction, point, data) {
+export function cleasingValues(element, valueBfChange, fraction, point, data) {
     data = clearComma(data);
     try {
         let dot = '';
@@ -144,8 +131,7 @@ function cleasingValues(element, valueBfChange, fraction, point, data) {
     }
     return [data, false];
 }
-exports.cleasingValues = cleasingValues;
-function formatNumber(element, maxvalue, decimal) {
+export function formatNumber(element, maxvalue, decimal) {
     let valueBfChange = element.value;
     let data = element.value;
     let point = 0;
@@ -164,8 +150,7 @@ function formatNumber(element, maxvalue, decimal) {
     [data, unchanged] = cleasingValues(element, valueBfChange, fraction, point, data);
     element.value = unchanged ? data : putComma(data);
 }
-exports.formatNumber = formatNumber;
-function putComma(data) {
+export function putComma(data) {
     if (data.includes(',')) {
         data = clearComma(data);
     }
@@ -180,15 +165,13 @@ function putComma(data) {
     }
     return data;
 }
-exports.putComma = putComma;
-function clearComma(data) {
+export function clearComma(data) {
     while (data.includes(',')) {
         data = data.replaceAll(',', '');
     }
     return data;
 }
-exports.clearComma = clearComma;
-function getCaretPosition(ctrl) {
+export function getCaretPosition(ctrl) {
     let iCaretPos = 0;
     if (document.selection) {
         ctrl.focus();
@@ -201,8 +184,7 @@ function getCaretPosition(ctrl) {
     }
     return (iCaretPos);
 }
-exports.getCaretPosition = getCaretPosition;
-function setCaretPosition(ctrl, iCaretPos) {
+export function setCaretPosition(ctrl, iCaretPos) {
     if (ctrl.createTextRange) {
         let selector = ctrl.createTextRange();
         selector.collapse(true);
@@ -216,14 +198,12 @@ function setCaretPosition(ctrl, iCaretPos) {
         ctrl.focus();
     }
 }
-exports.setCaretPosition = setCaretPosition;
-function parseNumber(avalue) {
+export function parseNumber(avalue) {
     if (!avalue)
         return 0;
     return Number(removeComma(avalue));
 }
-exports.parseNumber = parseNumber;
-function removeComma(avalue) {
+export function removeComma(avalue) {
     if (!avalue)
         return avalue;
     let result = avalue + "";
@@ -232,17 +212,14 @@ function removeComma(avalue) {
     }
     return result;
 }
-exports.removeComma = removeComma;
-function removeDelimiter(avalue, delimiter) {
+export function removeDelimiter(avalue, delimiter) {
     return avalue.replace(delimiter, "");
 }
-exports.removeDelimiter = removeDelimiter;
-function formatFloating(avalue, decimal) {
+export function formatFloating(avalue, decimal) {
     avalue = avalue + "";
     avalue = removeComma(avalue);
     return formatDecimal(avalue, decimal, true);
 }
-exports.formatFloating = formatFloating;
 function resolveDecimalSign(avalue) {
     let sign = "";
     let result = avalue + "";
@@ -291,7 +268,7 @@ function resolveDecimalString(avalue) {
     }
     return [astr, bstr, cstr];
 }
-function formatDecimal(avalue, decimal, verifydecimal) {
+export function formatDecimal(avalue, decimal, verifydecimal) {
     let [result, sign] = resolveDecimalSign(avalue);
     let [astr, bstr, cstr] = resolveDecimalString(result);
     if (!verifydecimal) {
@@ -314,9 +291,8 @@ function formatDecimal(avalue, decimal, verifydecimal) {
     }
     return sign + astr + "." + bstr;
 }
-exports.formatDecimal = formatDecimal;
 const header_action = { type: "button", action: "edit" };
-function ensureTableSetting(settings) {
+export function ensureTableSetting(settings) {
     let headers = { autoFormat: true, ...settings };
     if (headers.actions) {
         for (let act of headers.actions) {
@@ -337,22 +313,21 @@ function ensureTableSetting(settings) {
     }
     return headers;
 }
-exports.ensureTableSetting = ensureTableSetting;
-function formatDataTable(data, field) {
+export function formatDataTable(data, field) {
     try {
         if (field) {
             if (field.type == "DECIMAL") {
                 return formatFloating(data, field.decimal === undefined ? 2 : field.decimal);
             }
             else if (field.type == "DATE") {
-                let date = Utilities_1.Utilities.parseDate(data);
+                let date = Utilities.parseDate(data);
                 if (date)
-                    return Utilities_1.Utilities.formatDate(date);
+                    return Utilities.formatDate(date);
             }
             else if (field.type == "DATETIME") {
-                let date = Utilities_1.Utilities.parseDate(data);
+                let date = Utilities.parseDate(data);
                 if (date)
-                    return Utilities_1.Utilities.formatDateTime(date);
+                    return Utilities.formatDateTime(date);
             }
         }
         return data;
@@ -362,4 +337,3 @@ function formatDataTable(data, field) {
         return data;
     }
 }
-exports.formatDataTable = formatDataTable;

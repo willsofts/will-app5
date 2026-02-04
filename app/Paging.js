@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Paging = exports.DEFAULT_PAGE_SETTINGS = void 0;
-exports.DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0 };
-class Paging {
+export const DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0 };
+export class Paging {
     setting;
     constructor(setting = {}) {
-        this.setting = { ...exports.DEFAULT_PAGE_SETTINGS, ...setting };
+        this.setting = { ...DEFAULT_PAGE_SETTINGS, ...setting };
     }
     clear() {
-        this.reset(exports.DEFAULT_PAGE_SETTINGS);
+        this.reset(DEFAULT_PAGE_SETTINGS);
     }
     reset(setting) {
         if (setting) {
@@ -113,4 +110,3 @@ class Paging {
         }
     }
 }
-exports.Paging = Paging;

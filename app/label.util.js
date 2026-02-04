@@ -1,17 +1,11 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchLabel = exports.loadAndMergeProgramLabel = exports.loadAndMergeLabel = exports.mergeProgramLabels = exports.getApiLabel = exports.getLabelModel = exports.getLabelObject = exports.getLabelItem = exports.getLabel = void 0;
-const jquery_1 = __importDefault(require("jquery"));
-const app_info_1 = require("./app.info");
-const messenger_1 = require("./messenger");
-const msg_util_1 = require("./msg.util");
-function getLabel(name, defaultLabel, lang = (0, app_info_1.getDefaultLanguage)()) {
+import $ from "jquery";
+import { getDefaultLanguage, getDefaultLabels, getProgramLabels, getApiUrl, DEFAULT_CONTENT_TYPE, getMetaInfo } from "./app.info";
+import { getAccessorToken, getStorage, setStorage } from "./messenger";
+import { loadAndMergeMessageCode } from "./msg.util";
+export function getLabel(name, defaultLabel, lang = getDefaultLanguage()) {
     let result = undefined;
-    let default_labels = (0, app_info_1.getDefaultLabels)();
-    let program_labels = (0, app_info_1.getProgramLabels)();
+    let default_labels = getDefaultLabels();
+    let program_labels = getProgramLabels();
     if (!lang || lang.trim().length == 0)
         lang = "EN";
     let label_item = getLabelItem(name, lang, program_labels);
@@ -26,8 +20,7 @@ function getLabel(name, defaultLabel, lang = (0, app_info_1.getDefaultLanguage)(
     }
     return result ?? defaultLabel;
 }
-exports.getLabel = getLabel;
-function getLabelItem(name, lang, label_category) {
+export function getLabelItem(name, lang, label_category) {
     if (!lang || lang.trim().length == 0)
         lang = "EN";
     let lang_item = label_category.find((item) => { return item.language == lang; });
@@ -38,9 +31,8 @@ function getLabelItem(name, lang, label_category) {
     }
     return undefined;
 }
-exports.getLabelItem = getLabelItem;
-function getLabelObject(lang, label_category) {
-    const language = lang && lang.trim().length > 0 ? lang : (0, app_info_1.getDefaultLanguage)() || "EN";
+export function getLabelObject(lang, label_category) {
+    const language = lang && lang.trim().length > 0 ? lang : getDefaultLanguage() || "EN";
     let lang_item = label_category.find((item) => { return item.language == language; });
     if (!lang_item)
         lang_item = label_category.find((item) => { return item.language == "EN"; });
@@ -49,10 +41,9 @@ function getLabelObject(lang, label_category) {
     }
     return undefined;
 }
-exports.getLabelObject = getLabelObject;
-function getLabelModel(lang = (0, app_info_1.getDefaultLanguage)()) {
-    let default_labels = (0, app_info_1.getDefaultLabels)();
-    let program_labels = (0, app_info_1.getProgramLabels)();
+export function getLabelModel(lang = getDefaultLanguage()) {
+    let default_labels = getDefaultLabels();
+    let program_labels = getProgramLabels();
     let default_item = getLabelObject(lang, default_labels);
     let program_item = getLabelObject(lang, program_labels);
     let default_model = {};
@@ -65,17 +56,15 @@ function getLabelModel(lang = (0, app_info_1.getDefaultLanguage)()) {
     }
     return Object.assign(default_model, program_model);
 }
-exports.getLabelModel = getLabelModel;
-function getApiLabel() {
-    return (0, app_info_1.getApiUrl)() + ((0, app_info_1.getMetaInfo)().API_LABEL || "/api/label/fetch");
+export function getApiLabel() {
+    return getApiUrl() + (getMetaInfo().API_LABEL || "/api/label/fetch");
 }
-exports.getApiLabel = getApiLabel;
-function mergeProgramLabels(data_labels) {
+export function mergeProgramLabels(data_labels) {
     if (!data_labels)
         return false;
     if (!Array.isArray(data_labels) || data_labels.length <= 0)
         return false;
-    let program_labels = (0, app_info_1.getProgramLabels)();
+    let program_labels = getProgramLabels();
     for (let data of data_labels) {
         let lang = data.language;
         let lang_item = program_labels.find((item) => { return item.language == lang; });
@@ -86,16 +75,14 @@ function mergeProgramLabels(data_labels) {
     }
     return true;
 }
-exports.mergeProgramLabels = mergeProgramLabels;
-function loadAndMergeLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.LOAD_LABEL) == "true", url = getApiLabel()) {
+export function loadAndMergeLabel(id, callback, loadLabel = String(getMetaInfo()?.LOAD_LABEL) == "true", url = getApiLabel()) {
     loadAndMergeProgramLabel(id, callback, loadLabel, url);
-    (0, msg_util_1.loadAndMergeMessageCode)();
+    loadAndMergeMessageCode();
 }
-exports.loadAndMergeLabel = loadAndMergeLabel;
-function loadAndMergeProgramLabel(id, callback, loadLabel = String((0, app_info_1.getMetaInfo)()?.LOAD_LABEL) == "true", url = getApiLabel()) {
+export function loadAndMergeProgramLabel(id, callback, loadLabel = String(getMetaInfo()?.LOAD_LABEL) == "true", url = getApiLabel()) {
     if (!loadLabel)
         return;
-    let label_cached = (0, messenger_1.getStorage)(id);
+    let label_cached = getStorage(id);
     if (label_cached) {
         let merged = mergeProgramLabels(label_cached);
         if (merged && callback)
@@ -104,24 +91,23 @@ function loadAndMergeProgramLabel(id, callback, loadLabel = String((0, app_info_
     }
     fetchLabel(id, function (success, data) {
         if (success) {
-            (0, messenger_1.setStorage)(id, data.body);
+            setStorage(id, data.body);
             let merged = mergeProgramLabels(data.body);
             if (merged && callback)
                 callback(true, data.body);
         }
     }, url);
 }
-exports.loadAndMergeProgramLabel = loadAndMergeProgramLabel;
-function fetchLabel(id, callback, url = getApiLabel()) {
+export function fetchLabel(id, callback, url = getApiLabel()) {
     console.log("fetchLabel:", id);
-    let authtoken = (0, messenger_1.getAccessorToken)();
-    jquery_1.default.ajax({
+    let authtoken = getAccessorToken();
+    $.ajax({
         url: url,
         type: "POST",
         data: JSON.stringify({ labelid: id }),
         dataType: "json",
         headers: { "authtoken": authtoken },
-        contentType: app_info_1.DEFAULT_CONTENT_TYPE,
+        contentType: DEFAULT_CONTENT_TYPE,
         error: function (transport, status, errorThrown) {
             console.error(errorThrown);
             if (callback)
@@ -133,4 +119,3 @@ function fetchLabel(id, callback, url = getApiLabel()) {
         }
     });
 }
-exports.fetchLabel = fetchLabel;

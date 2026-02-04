@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.KnMask = void 0;
-class KnMask {
+export class KnMask {
     maskChar = "*";
     constructor(maskChar = "*") {
         this.maskChar = maskChar;
@@ -214,4 +211,3 @@ class KnMask {
         }
     }
 }
-exports.KnMask = KnMask;

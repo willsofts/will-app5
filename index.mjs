@@ -1825,23 +1825,24 @@ function bindingParentMessaging(callback) {
 }
 
 // src/app/app.info.ts
+var env = (typeof import.meta !== "undefined" && import.meta.env) ?? (typeof process !== "undefined" ? process.env : {});
 var appInfo = {
-  DEFAULT_LANGUAGE: process.env.VUE_APP_DEFAULT_LANGUAGE,
-  API_URL: process.env.VUE_APP_API_URL,
-  BASE_URL: process.env.VUE_APP_BASE_URL,
-  CDN_URL: process.env.VUE_APP_CDN_URL,
-  IMG_URL: process.env.VUE_APP_IMG_URL,
-  CHAT_URL: process.env.VUE_APP_CHAT_URL,
-  BASE_STORAGE: process.env.VUE_APP_BASE_STORAGE,
-  API_TOKEN: process.env.VUE_APP_API_TOKEN,
-  DEFAULT_RAW_PARAMETERS: process.env.VUE_APP_DEFAULT_RAW_PARAMETERS == "true",
-  SECURE_STORAGE: process.env.VUE_APP_SECURE_STORAGE == "true",
-  BASE_CSS: process.env.VUE_APP_BASE_CSS,
+  DEFAULT_LANGUAGE: env.VUE_APP_DEFAULT_LANGUAGE,
+  API_URL: env.VUE_APP_API_URL,
+  BASE_URL: env.VUE_APP_BASE_URL,
+  CDN_URL: env.VUE_APP_CDN_URL,
+  IMG_URL: env.VUE_APP_IMG_URL,
+  CHAT_URL: env.VUE_APP_CHAT_URL,
+  BASE_STORAGE: env.VUE_APP_BASE_STORAGE,
+  API_TOKEN: env.VUE_APP_API_TOKEN,
+  DEFAULT_RAW_PARAMETERS: env.VUE_APP_DEFAULT_RAW_PARAMETERS == "true",
+  SECURE_STORAGE: env.VUE_APP_SECURE_STORAGE == "true",
+  BASE_CSS: env.VUE_APP_BASE_CSS,
   MULTI_LANGUAGES: ["EN", "TH"],
-  TOKEN_KEY: process.env.VUE_APP_TOKEN_KEY,
+  TOKEN_KEY: env.VUE_APP_TOKEN_KEY,
   META_INFO: {}
 };
-var APP_MULTI_LANGUAGES = process.env.VUE_APP_MULTI_LANGUAGES;
+var APP_MULTI_LANGUAGES = env.VUE_APP_MULTI_LANGUAGES;
 if (APP_MULTI_LANGUAGES && APP_MULTI_LANGUAGES.trim().length > 0) {
   let multilangs = JSON.parse(APP_MULTI_LANGUAGES);
   if (Array.isArray(multilangs)) appInfo.MULTI_LANGUAGES = multilangs;

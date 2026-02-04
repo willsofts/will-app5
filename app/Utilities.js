@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Utilities = void 0;
-class Utilities {
+export class Utilities {
     static NORMAL = 0;
     static INTER = 1;
     static SHORT = 0;
@@ -554,4 +551,3 @@ class Utilities {
         return val !== undefined && val !== null && val !== "";
     }
 }
-exports.Utilities = Utilities;

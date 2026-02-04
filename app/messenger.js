@@ -1,70 +1,57 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.bindingParentMessaging = exports.bindingChildMessaging = exports.getDH = exports.setupDiffie = exports.handleRequestMessage = exports.sendMessageToOpener = exports.sendMessageToParent = exports.requestAccessorInfo = exports.sendMessageToFrame = exports.sendMessageInterface = exports.removeAccessorInfo = exports.saveAccessorInfo = exports.getAccessTokenKey = exports.getAccessorToken = exports.getAccessorInfo = exports.removeStorage = exports.setStorage = exports.getStorage = exports.getCurrentWindow = exports.setCurrentWindow = exports.setMessagingCallback = exports.getSecureEngine = void 0;
-const app_info_1 = require("./app.info");
-const app_util_1 = require("./app.util");
-const dh_1 = require("./dh");
-const secure_ls_1 = __importDefault(require("secure-ls"));
+import { getApiUrl, getBaseUrl, getCdnUrl, getImgUrl, getDefaultLanguage, getApiToken, getBaseStorage, setApiUrl, setBaseUrl, setCdnUrl, setImgUrl, setDefaultLanguage, setApiToken, getDefaultRawParameters, setDefaultRawParameters, setBaseStorage, isSecureStorage, setSecureStorage, getBaseCss, setBaseCss, getChatUrl, setChatUrl, getMultiLanguages, setMultiLanguages, initConfigure, getTokenKey, setTokenKey, getMetaInfo, setMetaInfo } from "./app.info";
+import { createLinkStyle } from "./app.util";
+import { DH } from "./dh";
+import SecureLS from 'secure-ls';
 let messagingCallback;
 let currentWindow;
 let secureEngine;
-function getSecureEngine() {
+export function getSecureEngine() {
     if (!secureEngine) {
-        secureEngine = (0, app_info_1.isSecureStorage)() ? new secure_ls_1.default({ storage: "local" == (0, app_info_1.getBaseStorage)() ? localStorage : sessionStorage }) : null;
+        secureEngine = isSecureStorage() ? new SecureLS({ storage: "local" == getBaseStorage() ? localStorage : sessionStorage }) : null;
     }
     return secureEngine;
 }
-exports.getSecureEngine = getSecureEngine;
-function setMessagingCallback(callback) {
+export function setMessagingCallback(callback) {
     messagingCallback = callback;
 }
-exports.setMessagingCallback = setMessagingCallback;
-function setCurrentWindow(curwin) {
+export function setCurrentWindow(curwin) {
     currentWindow = curwin;
 }
-exports.setCurrentWindow = setCurrentWindow;
-function getCurrentWindow() { return currentWindow; }
-exports.getCurrentWindow = getCurrentWindow;
-function getStorage(key) {
+export function getCurrentWindow() { return currentWindow; }
+export function getStorage(key) {
     let secureLs = getSecureEngine();
     if (secureLs)
         return secureLs.get(key);
-    if ("local" == (0, app_info_1.getBaseStorage)()) {
+    if ("local" == getBaseStorage()) {
         return localStorage.getItem(key);
     }
     return sessionStorage.getItem(key);
 }
-exports.getStorage = getStorage;
-function setStorage(key, value) {
+export function setStorage(key, value) {
     let secureLs = getSecureEngine();
     if (secureLs) {
         secureLs.set(key, value);
         return;
     }
-    if ("local" == (0, app_info_1.getBaseStorage)()) {
+    if ("local" == getBaseStorage()) {
         localStorage.setItem(key, value);
         return;
     }
     sessionStorage.setItem(key, value);
 }
-exports.setStorage = setStorage;
-function removeStorage(key) {
+export function removeStorage(key) {
     let secureLs = getSecureEngine();
     if (secureLs) {
         secureLs.remove(key);
         return;
     }
-    if ("local" == (0, app_info_1.getBaseStorage)()) {
+    if ("local" == getBaseStorage()) {
         localStorage.removeItem(key);
         return;
     }
     sessionStorage.removeItem(key);
 }
-exports.removeStorage = removeStorage;
-function getAccessorInfo() {
+export function getAccessorInfo() {
     let info = getStorage("accessorinfo");
     if (info && info != "") {
         try {
@@ -76,43 +63,37 @@ function getAccessorInfo() {
     }
     return null;
 }
-exports.getAccessorInfo = getAccessorInfo;
-function getAccessorToken() {
+export function getAccessorToken() {
     let json = getAccessorInfo();
     if (json?.authtoken) {
         return json.authtoken;
     }
-    let token = (0, app_info_1.getApiToken)();
+    let token = getApiToken();
     return token || "";
 }
-exports.getAccessorToken = getAccessorToken;
-function getAccessTokenKey() {
+export function getAccessTokenKey() {
     let json = getAccessorInfo();
     if (json?.tokenkey) {
         return json.tokenkey;
     }
-    let token = (0, app_info_1.getTokenKey)();
+    let token = getTokenKey();
     return token || "";
 }
-exports.getAccessTokenKey = getAccessTokenKey;
-function saveAccessorInfo(json) {
+export function saveAccessorInfo(json) {
     setStorage("accessorinfo", JSON.stringify(json));
 }
-exports.saveAccessorInfo = saveAccessorInfo;
-function removeAccessorInfo() {
+export function removeAccessorInfo() {
     removeStorage("accessorinfo");
 }
-exports.removeAccessorInfo = removeAccessorInfo;
-function sendMessageInterface(type, win) {
+export function sendMessageInterface(type, win) {
     let moderator = win ? "opener" : "parent";
     let info = getAccessorInfo();
     let options = getStorage("accessoptions");
-    let msg = { type: type || "storage", archetype: "willsofts", moderator: moderator, API_URL: (0, app_info_1.getApiUrl)(), BASE_URL: (0, app_info_1.getBaseUrl)(), CDN_URL: (0, app_info_1.getCdnUrl)(), IMG_URL: (0, app_info_1.getImgUrl)(), DEFAULT_LANGUAGE: (0, app_info_1.getDefaultLanguage)(), API_TOKEN: (0, app_info_1.getApiToken)(), BASE_STORAGE: (0, app_info_1.getBaseStorage)(), SECURE_STORAGE: (0, app_info_1.isSecureStorage)(), BASE_CSS: (0, app_info_1.getBaseCss)(), CHAT_URL: (0, app_info_1.getChatUrl)(), MULTI_LANGUAGES: (0, app_info_1.getMultiLanguages)(), TOKEN_KEY: (0, app_info_1.getTokenKey)(), META_INFO: (0, app_info_1.getMetaInfo)(), accessorinfo: info, accessoptions: options };
+    let msg = { type: type || "storage", archetype: "willsofts", moderator: moderator, API_URL: getApiUrl(), BASE_URL: getBaseUrl(), CDN_URL: getCdnUrl(), IMG_URL: getImgUrl(), DEFAULT_LANGUAGE: getDefaultLanguage(), API_TOKEN: getApiToken(), BASE_STORAGE: getBaseStorage(), SECURE_STORAGE: isSecureStorage(), BASE_CSS: getBaseCss(), CHAT_URL: getChatUrl(), MULTI_LANGUAGES: getMultiLanguages(), TOKEN_KEY: getTokenKey(), META_INFO: getMetaInfo(), accessorinfo: info, accessoptions: options };
     return sendMessageToFrame(msg, win);
 }
-exports.sendMessageInterface = sendMessageInterface;
 const ALLOWED_ORIGINS = "*";
-function sendMessageToFrame(data, win) {
+export function sendMessageToFrame(data, win) {
     if (!data)
         return false;
     try {
@@ -138,8 +119,7 @@ function sendMessageToFrame(data, win) {
     }
     return false;
 }
-exports.sendMessageToFrame = sendMessageToFrame;
-function requestAccessorInfo(callback) {
+export function requestAccessorInfo(callback) {
     if (callback)
         setMessagingCallback(callback);
     let msg = { type: "accessorinfo", archetype: "willsofts" };
@@ -151,8 +131,7 @@ function requestAccessorInfo(callback) {
     }
     return sendMessageToParent(msg);
 }
-exports.requestAccessorInfo = requestAccessorInfo;
-function sendMessageToParent(data) {
+export function sendMessageToParent(data) {
     if (!data)
         return;
     try {
@@ -165,8 +144,7 @@ function sendMessageToParent(data) {
     }
     return false;
 }
-exports.sendMessageToParent = sendMessageToParent;
-function sendMessageToOpener(data) {
+export function sendMessageToOpener(data) {
     if (!data)
         return;
     try {
@@ -179,25 +157,24 @@ function sendMessageToOpener(data) {
     }
     return false;
 }
-exports.sendMessageToOpener = sendMessageToOpener;
-function handleRequestMessage(data) {
+export function handleRequestMessage(data) {
     if (data.type == "storage") {
         console.log("handleRequestMessage: data", data);
         const setters = {
-            TOKEN_KEY: app_info_1.setTokenKey,
-            API_URL: app_info_1.setApiUrl,
-            BASE_URL: app_info_1.setBaseUrl,
-            CDN_URL: app_info_1.setCdnUrl,
-            IMG_URL: app_info_1.setImgUrl,
-            DEFAULT_LANGUAGE: app_info_1.setDefaultLanguage,
-            API_TOKEN: app_info_1.setApiToken,
-            BASE_STORAGE: app_info_1.setBaseStorage,
-            SECURE_STORAGE: app_info_1.setSecureStorage,
-            BASE_CSS: app_info_1.setBaseCss,
-            CHAT_URL: app_info_1.setChatUrl,
-            MULTI_LANGUAGES: app_info_1.setMultiLanguages,
-            DEFAULT_RAW_PARAMETERS: app_info_1.setDefaultRawParameters,
-            META_INFO: app_info_1.setMetaInfo
+            TOKEN_KEY: setTokenKey,
+            API_URL: setApiUrl,
+            BASE_URL: setBaseUrl,
+            CDN_URL: setCdnUrl,
+            IMG_URL: setImgUrl,
+            DEFAULT_LANGUAGE: setDefaultLanguage,
+            API_TOKEN: setApiToken,
+            BASE_STORAGE: setBaseStorage,
+            SECURE_STORAGE: setSecureStorage,
+            BASE_CSS: setBaseCss,
+            CHAT_URL: setChatUrl,
+            MULTI_LANGUAGES: setMultiLanguages,
+            DEFAULT_RAW_PARAMETERS: setDefaultRawParameters,
+            META_INFO: setMetaInfo
         };
         for (const key in setters) {
             if (data[key] !== undefined) {
@@ -210,42 +187,41 @@ function handleRequestMessage(data) {
             saveAccessorInfo(data.accessorinfo);
         }
         console.info("handleRequestMessage: accessor info", data.accessorinfo);
-        console.info("handleRequestMessage: DEFAULT_LANGUAGE=" + (0, app_info_1.getDefaultLanguage)(), ", BASE_STORAGE=" + (0, app_info_1.getBaseStorage)(), ", DEFAULT_RAW_PARAMETERS=" + (0, app_info_1.getDefaultRawParameters)(), ", SECURE_STORAGE=" + (0, app_info_1.isSecureStorage)());
-        console.info("handleRequestMessage: API_URL=" + (0, app_info_1.getApiUrl)(), ", BASE_URL=" + (0, app_info_1.getBaseUrl)(), ", CDN_URL=" + (0, app_info_1.getCdnUrl)(), ", IMG_URL=" + (0, app_info_1.getImgUrl)() + ", BASE_CSS=" + (0, app_info_1.getBaseCss)() + ", CHAT_URL=" + (0, app_info_1.getChatUrl)() + ", MULTI_LANGUAGES=" + (0, app_info_1.getMultiLanguages)());
-        console.info("handleRequestMessage: API_TOKEN=" + (0, app_info_1.getApiToken)(), ", META_INFO=", (0, app_info_1.getMetaInfo)());
-        (0, app_util_1.createLinkStyle)((0, app_info_1.getBaseCss)());
+        console.info("handleRequestMessage: DEFAULT_LANGUAGE=" + getDefaultLanguage(), ", BASE_STORAGE=" + getBaseStorage(), ", DEFAULT_RAW_PARAMETERS=" + getDefaultRawParameters(), ", SECURE_STORAGE=" + isSecureStorage());
+        console.info("handleRequestMessage: API_URL=" + getApiUrl(), ", BASE_URL=" + getBaseUrl(), ", CDN_URL=" + getCdnUrl(), ", IMG_URL=" + getImgUrl() + ", BASE_CSS=" + getBaseCss() + ", CHAT_URL=" + getChatUrl() + ", MULTI_LANGUAGES=" + getMultiLanguages());
+        console.info("handleRequestMessage: API_TOKEN=" + getApiToken(), ", META_INFO=", getMetaInfo());
+        createLinkStyle(getBaseCss());
     }
     handleMessagingCallback(data);
 }
-exports.handleRequestMessage = handleRequestMessage;
 function handleMessagingCallback(data) {
     if (!messagingCallback || data.archetype !== "willsofts") {
         return;
     }
     if (data.type === "storage") {
         try {
-            (0, app_info_1.initConfigure)();
+            initConfigure();
         }
         catch (ex) {
             console.error(ex);
         }
     }
-    const exceptTypes = (0, app_info_1.getMetaInfo)().EXCEPT_MESSAGE_TYPES ?? ["appinfo"];
+    const exceptTypes = getMetaInfo().EXCEPT_MESSAGE_TYPES ?? ["appinfo"];
     if (exceptTypes.includes(data.type)) {
         return;
     }
     messagingCallback(data);
 }
-function setupDiffie(json) {
+export function setupDiffie(json) {
     console.log("setupDiffie", getAccessorToken());
     let info = json.body.info;
     if (info) {
-        const dh = new dh_1.DH();
+        const dh = new DH();
         dh.prime = info.prime;
         dh.generator = info.generator;
         dh.otherPublicKey = info.publickey;
         dh.compute();
-        if (String((0, app_info_1.getMetaInfo)().DISABLE_DIFFIE) !== "true") {
+        if (String(getMetaInfo().DISABLE_DIFFIE) !== "true") {
             dh.updatePublicKey((success) => {
                 if (success) {
                     info.handshake = "C"; //confirm
@@ -261,15 +237,14 @@ function setupDiffie(json) {
         saveAccessorInfo(json.body);
     }
 }
-exports.setupDiffie = setupDiffie;
-function getDH() {
+export function getDH() {
     let json = getAccessorInfo();
     if (json?.info) {
         let info = json.info;
         if (!info.handshake || info.handshake == "" || info.handshake == "F")
             return null; //not confirm or fail
         if (info.prime && info.generator && info.publickey && info.privatekey && info.sharedkey && info.otherpublickey) {
-            const dh = new dh_1.DH();
+            const dh = new DH();
             dh.prime = info.prime;
             dh.generator = info.generator;
             dh.otherPublicKey = info.publickey;
@@ -282,8 +257,7 @@ function getDH() {
     }
     return null;
 }
-exports.getDH = getDH;
-function bindingChildMessaging() {
+export function bindingChildMessaging() {
     window.onmessage = function (e) {
         console.log("window-messenger: onmessage:", e.data);
         try {
@@ -305,8 +279,7 @@ function bindingChildMessaging() {
         }
     };
 }
-exports.bindingChildMessaging = bindingChildMessaging;
-function bindingParentMessaging(callback) {
+export function bindingParentMessaging(callback) {
     window.onmessage = function (e) {
         console.log("window-main: onmessage:", e.data);
         try {
@@ -333,4 +306,3 @@ function bindingParentMessaging(callback) {
         }
     };
 }
-exports.bindingParentMessaging = bindingParentMessaging;
