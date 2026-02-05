@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from "./jquery.util";
 import { getApiUrl } from "./app.info";
 import { getRequestID, randomize } from "./app.util";
 import { getAccessorInfo } from "./messenger";

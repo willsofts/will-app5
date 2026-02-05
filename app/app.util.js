@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from "./jquery.util";
 import bootbox from "../bootbox/bootbox";
 import { Modal } from "bootstrap";
 import { getMessageCode } from "./msg.util";

@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from "./jquery.util";
 import { getDefaultLanguage, getProgramMessage, getApiUrl, getMetaInfo, DEFAULT_CONTENT_TYPE } from "./app.info";
 import { getAccessorToken, getStorage, setStorage } from "./messenger";
 export function getMessageCode(errcode, params, defaultMessage) {

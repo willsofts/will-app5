@@ -1,8 +1,3 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
 /*! @preserve
  * bootbox.js
  * version: 6.0.0
@@ -10,8 +5,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * license: MIT
  * http://bootboxjs.com/
  */
-const bootstrap_1 = require("bootstrap");
-const jquery_1 = __importDefault(require("jquery"));
+import { Modal } from "bootstrap";
+import $ from '../app/jquery.util';
 function init() {
     'use strict';
     let exports = {};
@@ -102,7 +97,7 @@ function init() {
      * @returns The updated bootbox object
      */
     exports.addLocale = function (name, values) {
-        jquery_1.default.each(['OK', 'CANCEL', 'CONFIRM'], function (_, v) {
+        $.each(['OK', 'CANCEL', 'CONFIRM'], function (_, v) {
             if (!values[v]) {
                 throw new Error('Please supply a translation for "' + v + '"');
             }
@@ -150,7 +145,7 @@ function init() {
             // ... and as an object too
             values = arguments[0];
         }
-        jquery_1.default.extend(defaults, values);
+        $.extend(defaults, values);
         return exports;
     };
     /**
@@ -159,7 +154,7 @@ function init() {
      */
     exports.hideAll = function () {
         //$('.bootbox').modal('hide');
-        let dialog = new bootstrap_1.Modal((0, jquery_1.default)('.bootbox').get(0));
+        let dialog = new Modal($('.bootbox').get(0));
         dialog.hide();
         return exports;
     };
@@ -180,7 +175,7 @@ function init() {
      */
     exports.dialog = function (options) {
         options = sanitize(options);
-        let modal = jquery_1.default.fn.modal;
+        let modal = $.fn.modal;
         if (modal && modal.Constructor.VERSION) {
             options.fullBootstrapVersion = modal.Constructor.VERSION;
             let i = options.fullBootstrapVersion.indexOf('.');
@@ -190,11 +185,11 @@ function init() {
             options.bootstrap = '5';
             options.fullBootstrapVersion = '5.1.3';
         }
-        let dialog = (0, jquery_1.default)(templates.dialog);
+        let dialog = $(templates.dialog);
         let innerDialog = dialog.find('.modal-dialog');
         let body = dialog.find('.modal-body');
-        let header = (0, jquery_1.default)(templates.header);
-        let footer = (0, jquery_1.default)(templates.footer);
+        let header = $(templates.header);
+        let footer = $(templates.footer);
         let buttons = options.buttons;
         let callbacks = {
             onEscape: options.onEscape
@@ -203,7 +198,7 @@ function init() {
         // Only attempt to create buttons if at least one has been defined in the options object
         if (getKeyLength(options.buttons) > 0) {
             each(buttons, function (key, b) {
-                let button = (0, jquery_1.default)(templates.button);
+                let button = $(templates.button);
                 button.data('bb-handler', key);
                 button.addClass(b.className);
                 switch (key) {
@@ -275,7 +270,7 @@ function init() {
                 header.addClass('border-0');
             }
             if (options.closeButton) {
-                let closeButton = (0, jquery_1.default)(templates.closeButton);
+                let closeButton = $(templates.closeButton);
                 if (options.bootstrap < 5) {
                     closeButton.html('&times;');
                 }
@@ -369,7 +364,7 @@ function init() {
             }
         });
         dialog.on('click', '.modal-footer button:not(.disabled)', function (e) {
-            let callbackKey = (0, jquery_1.default)(this).data('bb-handler');
+            let callbackKey = $(this).data('bb-handler');
             if (callbackKey !== undefined) {
                 // Only process callbacks for buttons we recognize:
                 processCallback(e, dialog, callbacks[callbackKey]);
@@ -388,13 +383,13 @@ function init() {
         The remainder of this method simply deals with adding our dialog element to the DOM, augmenting it with
         Bootstrap's modal functionality and then giving the resulting object back to our caller
         */
-        (0, jquery_1.default)(options.container).append(dialog);
+        $(options.container).append(dialog);
         /*dialog.modal({
           backdrop: options.backdrop,
           keyboard: false,
           show: false
         }); */
-        let mdialog = new bootstrap_1.Modal(dialog.get(0), {
+        let mdialog = new Modal(dialog.get(0), {
             backdrop: options.backdrop,
             keyboard: false,
             //show: false
@@ -459,7 +454,7 @@ function init() {
         let inputOptions;
         // We have to create our form first, otherwise its value is undefined when gearing up our options.
         // @TODO this could be solved by allowing message to be a function instead...
-        form = (0, jquery_1.default)(templates.form);
+        form = $(templates.form);
         // prompt defaults are more complex than others in that users can override more defaults
         options = mergeDialogOptions('prompt', ['cancel', 'confirm'], ['title', 'callback'], arguments);
         if (!options.value) {
@@ -481,7 +476,7 @@ function init() {
             let value;
             if (options.inputType === 'checkbox') {
                 value = input.find('input:checked').map(function (item) {
-                    return (0, jquery_1.default)(item).val();
+                    return $(item).val();
                 }).get();
             }
             else if (options.inputType === 'radio') {
@@ -507,7 +502,7 @@ function init() {
                 else {
                     if (options.inputType === 'select' && options.multiple === true) {
                         value = input.find('option:selected').map(function (item) {
-                            return (0, jquery_1.default)(item).val();
+                            return $(item).val();
                         }).get();
                     }
                     else {
@@ -528,7 +523,7 @@ function init() {
             throw new Error('Invalid prompt type');
         }
         // Create the input based on the supplied type
-        input = (0, jquery_1.default)(templates.inputs[options.inputType]);
+        input = $(templates.inputs[options.inputType]);
         switch (options.inputType) {
             case 'text':
             case 'textarea':
@@ -624,11 +619,11 @@ function init() {
                     if (option.group) {
                         // Initialise group if necessary
                         if (!groups[option.group]) {
-                            groups[option.group] = (0, jquery_1.default)('<optgroup />').attr('label', option.group);
+                            groups[option.group] = $('<optgroup />').attr('label', option.group);
                         }
                         elem = groups[option.group];
                     }
-                    let o = (0, jquery_1.default)(templates.option);
+                    let o = $(templates.option);
                     o.attr('value', option.value).text(option.text);
                     elem.append(o);
                 });
@@ -648,12 +643,12 @@ function init() {
                     throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');
                 }
                 // Checkboxes have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
-                input = (0, jquery_1.default)('<div class="bootbox-checkbox-list"></div>');
+                input = $('<div class="bootbox-checkbox-list"></div>');
                 each(inputOptions, function (_, option) {
                     if (option.value === undefined || option.text === undefined) {
                         throw new Error('each option needs a "value" property and a "text" property');
                     }
-                    let checkbox = (0, jquery_1.default)(templates.inputs[options.inputType]);
+                    let checkbox = $(templates.inputs[options.inputType]);
                     checkbox.find('input').attr('value', option.value);
                     checkbox.find('label').append('\n' + option.text);
                     // We've ensured values is an array, so we can always iterate over it
@@ -675,7 +670,7 @@ function init() {
                     throw new Error('prompt with "inputType" set to "radio" requires at least one option');
                 }
                 // Radiobuttons have to nest within a containing element, so they break the rules a bit and we end up re-assigning our 'input' element to this container instead
-                input = (0, jquery_1.default)('<div class="bootbox-radiobutton-list"></div>');
+                input = $('<div class="bootbox-radiobutton-list"></div>');
                 // Radiobuttons should always have an initial checked input checked in a "group".
                 // If value is undefined or doesn't match an input option, select the first radiobutton
                 var checkFirstRadio = true;
@@ -683,7 +678,7 @@ function init() {
                     if (option.value === undefined || option.text === undefined) {
                         throw new Error('each option needs a "value" property and a "text" property');
                     }
-                    let radio = (0, jquery_1.default)(templates.inputs[options.inputType]);
+                    let radio = $(templates.inputs[options.inputType]);
                     radio.find('input').attr('value', option.value);
                     radio.find('label').append('\n' + option.text);
                     if (options.value !== undefined) {
@@ -711,7 +706,7 @@ function init() {
         });
         if (options.message && options.message.trim() !== '') {
             // Add the form to whatever content the user may have added.
-            let message = (0, jquery_1.default)(templates.promptMessage).html(options.message);
+            let message = $(templates.promptMessage).html(options.message);
             form.prepend(message);
             options.message = form;
         }
@@ -733,7 +728,7 @@ function init() {
         });
         if (shouldShow === true) {
             //promptDialog.modal('show');
-            let mdialog = new bootstrap_1.Modal(promptDialog.get(0));
+            let mdialog = new Modal(promptDialog.get(0));
             mdialog.show();
         }
         return promptDialog;
@@ -767,7 +762,7 @@ function init() {
     }
     // Merge a set of default dialog options with user supplied arguments
     function mergeArguments(defaults, args, properties) {
-        return jquery_1.default.extend(
+        return $.extend(
         // Deep merge
         true, 
         // Ensure the target is an empty, unreferenced object
@@ -845,7 +840,7 @@ function init() {
             throw new Error('"message" option must not be null or an empty string.');
         }
         // Make sure any supplied options take precedence over defaults
-        options = jquery_1.default.extend({}, defaults, options);
+        options = $.extend({}, defaults, options);
         // Make sure backdrop is either true, false, or 'static'
         if (!options.backdrop) {
             options.backdrop = (options.backdrop === false || options.backdrop === 0) ? false : 'static';
@@ -901,7 +896,7 @@ function init() {
     // Tiny wrapper function around jQuery.each; just adds index as the third parameter
     function each(collection, iterator) {
         let index = 0;
-        jquery_1.default.each(collection, function (key, value) {
+        $.each(collection, function (key, value) {
             iterator(key, value, index++);
         });
     }
@@ -941,7 +936,7 @@ function init() {
             //dialog.modal('hide');
             let mdialog = dialog.data("modal-dialog");
             if (!mdialog)
-                mdialog = new bootstrap_1.Modal(dialog.get(0));
+                mdialog = new Modal(dialog.get(0));
             mdialog.hide();
         }
     }
@@ -995,4 +990,4 @@ function init() {
     //  The Bootbox object
     return exports;
 }
-exports.default = init();
+export default init();

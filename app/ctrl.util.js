@@ -1,4 +1,4 @@
-import $ from "jquery";
+import $ from "./jquery.util";
 import { Utilities } from "./Utilities";
 export function getControlClasses(attrClass, ...classes) {
     let ctrlClasses = "";

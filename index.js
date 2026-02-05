@@ -205,12 +205,18 @@ __export(index_exports, {
 });
 module.exports = __toCommonJS(index_exports);
 
-// src/app/app.util.ts
-var import_jquery3 = __toESM(require("jquery"));
+// src/app/jquery.util.ts
+function getJQuery() {
+  const jq = globalThis.jQuery || globalThis.$;
+  if (!jq) {
+    throw new Error("jQuery not found. Please load jquery first.");
+  }
+  return jq;
+}
+var jquery_util_default = getJQuery();
 
 // src/bootbox/bootbox.ts
 var import_bootstrap = require("bootstrap");
-var import_jquery = __toESM(require("jquery"));
 function init() {
   "use strict";
   let exports2 = {};
@@ -288,7 +294,7 @@ function init() {
     return name ? locales[name] : locales;
   };
   exports2.addLocale = function(name, values) {
-    import_jquery.default.each(["OK", "CANCEL", "CONFIRM"], function(_, v) {
+    jquery_util_default.each(["OK", "CANCEL", "CONFIRM"], function(_, v) {
       if (!values[v]) {
         throw new Error('Please supply a translation for "' + v + '"');
       }
@@ -318,11 +324,11 @@ function init() {
     } else {
       values = arguments[0];
     }
-    import_jquery.default.extend(defaults, values);
+    jquery_util_default.extend(defaults, values);
     return exports2;
   };
   exports2.hideAll = function() {
-    let dialog = new import_bootstrap.Modal((0, import_jquery.default)(".bootbox").get(0));
+    let dialog = new import_bootstrap.Modal(jquery_util_default(".bootbox").get(0));
     dialog.hide();
     return exports2;
   };
@@ -331,7 +337,7 @@ function init() {
   };
   exports2.dialog = function(options) {
     options = sanitize(options);
-    let modal = import_jquery.default.fn.modal;
+    let modal = jquery_util_default.fn.modal;
     if (modal && modal.Constructor.VERSION) {
       options.fullBootstrapVersion = modal.Constructor.VERSION;
       let i = options.fullBootstrapVersion.indexOf(".");
@@ -340,11 +346,11 @@ function init() {
       options.bootstrap = "5";
       options.fullBootstrapVersion = "5.1.3";
     }
-    let dialog = (0, import_jquery.default)(templates.dialog);
+    let dialog = jquery_util_default(templates.dialog);
     let innerDialog = dialog.find(".modal-dialog");
     let body = dialog.find(".modal-body");
-    let header = (0, import_jquery.default)(templates.header);
-    let footer = (0, import_jquery.default)(templates.footer);
+    let header = jquery_util_default(templates.header);
+    let footer = jquery_util_default(templates.footer);
     let buttons = options.buttons;
     let callbacks = {
       onEscape: options.onEscape
@@ -352,7 +358,7 @@ function init() {
     body.find(".bootbox-body").html(options.message);
     if (getKeyLength(options.buttons) > 0) {
       each(buttons, function(key, b) {
-        let button = (0, import_jquery.default)(templates.button);
+        let button = jquery_util_default(templates.button);
         button.data("bb-handler", key);
         button.addClass(b.className);
         switch (key) {
@@ -420,7 +426,7 @@ function init() {
         header.addClass("border-0");
       }
       if (options.closeButton) {
-        let closeButton = (0, import_jquery.default)(templates.closeButton);
+        let closeButton = jquery_util_default(templates.closeButton);
         if (options.bootstrap < 5) {
           closeButton.html("&times;");
         }
@@ -490,7 +496,7 @@ function init() {
       }
     });
     dialog.on("click", ".modal-footer button:not(.disabled)", function(e) {
-      let callbackKey = (0, import_jquery.default)(this).data("bb-handler");
+      let callbackKey = jquery_util_default(this).data("bb-handler");
       if (callbackKey !== void 0) {
         processCallback(e, dialog, callbacks[callbackKey]);
       }
@@ -503,7 +509,7 @@ function init() {
         dialog.trigger("escape.close.bb");
       }
     });
-    (0, import_jquery.default)(options.container).append(dialog);
+    jquery_util_default(options.container).append(dialog);
     let mdialog = new import_bootstrap.Modal(dialog.get(0), {
       backdrop: options.backdrop,
       keyboard: false
@@ -550,7 +556,7 @@ function init() {
     let input;
     let shouldShow;
     let inputOptions;
-    form = (0, import_jquery.default)(templates.form);
+    form = jquery_util_default(templates.form);
     options = mergeDialogOptions("prompt", ["cancel", "confirm"], ["title", "callback"], arguments);
     if (!options.value) {
       options.value = defaults.value;
@@ -567,7 +573,7 @@ function init() {
       let value;
       if (options.inputType === "checkbox") {
         value = input.find("input:checked").map(function(item) {
-          return (0, import_jquery.default)(item).val();
+          return jquery_util_default(item).val();
         }).get();
       } else if (options.inputType === "radio") {
         value = input.find("input:checked").val();
@@ -587,7 +593,7 @@ function init() {
         } else {
           if (options.inputType === "select" && options.multiple === true) {
             value = input.find("option:selected").map(function(item) {
-              return (0, import_jquery.default)(item).val();
+              return jquery_util_default(item).val();
             }).get();
           } else {
             value = input.val();
@@ -605,7 +611,7 @@ function init() {
     if (!templates.inputs[options.inputType]) {
       throw new Error("Invalid prompt type");
     }
-    input = (0, import_jquery.default)(templates.inputs[options.inputType]);
+    input = jquery_util_default(templates.inputs[options.inputType]);
     switch (options.inputType) {
       case "text":
       case "textarea":
@@ -690,11 +696,11 @@ function init() {
           }
           if (option.group) {
             if (!groups[option.group]) {
-              groups[option.group] = (0, import_jquery.default)("<optgroup />").attr("label", option.group);
+              groups[option.group] = jquery_util_default("<optgroup />").attr("label", option.group);
             }
             elem = groups[option.group];
           }
-          let o = (0, import_jquery.default)(templates.option);
+          let o = jquery_util_default(templates.option);
           o.attr("value", option.value).text(option.text);
           elem.append(o);
         });
@@ -712,12 +718,12 @@ function init() {
         if (!inputOptions.length) {
           throw new Error('prompt with "inputType" set to "checkbox" requires at least one option');
         }
-        input = (0, import_jquery.default)('<div class="bootbox-checkbox-list"></div>');
+        input = jquery_util_default('<div class="bootbox-checkbox-list"></div>');
         each(inputOptions, function(_, option) {
           if (option.value === void 0 || option.text === void 0) {
             throw new Error('each option needs a "value" property and a "text" property');
           }
-          let checkbox = (0, import_jquery.default)(templates.inputs[options.inputType]);
+          let checkbox = jquery_util_default(templates.inputs[options.inputType]);
           checkbox.find("input").attr("value", option.value);
           checkbox.find("label").append("\n" + option.text);
           each(checkboxValues, function(_2, value) {
@@ -736,13 +742,13 @@ function init() {
         if (!inputOptions.length) {
           throw new Error('prompt with "inputType" set to "radio" requires at least one option');
         }
-        input = (0, import_jquery.default)('<div class="bootbox-radiobutton-list"></div>');
+        input = jquery_util_default('<div class="bootbox-radiobutton-list"></div>');
         var checkFirstRadio = true;
         each(inputOptions, function(_, option) {
           if (option.value === void 0 || option.text === void 0) {
             throw new Error('each option needs a "value" property and a "text" property');
           }
-          let radio = (0, import_jquery.default)(templates.inputs[options.inputType]);
+          let radio = jquery_util_default(templates.inputs[options.inputType]);
           radio.find("input").attr("value", option.value);
           radio.find("label").append("\n" + option.text);
           if (options.value !== void 0) {
@@ -765,7 +771,7 @@ function init() {
       promptDialog.find(".bootbox-accept").trigger("click");
     });
     if (options.message && options.message.trim() !== "") {
-      let message = (0, import_jquery.default)(templates.promptMessage).html(options.message);
+      let message = jquery_util_default(templates.promptMessage).html(options.message);
       form.prepend(message);
       options.message = form;
     } else {
@@ -800,7 +806,7 @@ function init() {
     return options;
   }
   function mergeArguments(defaults2, args, properties) {
-    return import_jquery.default.extend(
+    return jquery_util_default.extend(
       // Deep merge
       true,
       // Ensure the target is an empty, unreferenced object
@@ -872,7 +878,7 @@ function init() {
     if (!options.message) {
       throw new Error('"message" option must not be null or an empty string.');
     }
-    options = import_jquery.default.extend({}, defaults, options);
+    options = jquery_util_default.extend({}, defaults, options);
     if (!options.backdrop) {
       options.backdrop = options.backdrop === false || options.backdrop === 0 ? false : "static";
     } else {
@@ -916,7 +922,7 @@ function init() {
   }
   function each(collection, iterator) {
     let index = 0;
-    import_jquery.default.each(collection, function(key, value) {
+    jquery_util_default.each(collection, function(key, value) {
       iterator(key, value, index++);
     });
   }
@@ -1001,7 +1007,6 @@ var bootbox_default = init();
 var import_bootstrap2 = require("bootstrap");
 
 // src/app/msg.util.ts
-var import_jquery2 = __toESM(require("jquery"));
 function getMessageCode(errcode, params, defaultMessage) {
   if (errcode && errcode.trim().length > 0) {
     let program_message2 = getProgramMessage();
@@ -1064,7 +1069,7 @@ function loadAndMergeMessageCode(callback, loadMessageCode = String(getMetaInfo(
 function fetchMessageCode(code, callback, url = getApiMessageCode()) {
   console.log("fetchMessageCode: ", code);
   let authtoken = getAccessorToken();
-  import_jquery2.default.ajax({
+  jquery_util_default.ajax({
     url,
     type: "POST",
     data: code ? JSON.stringify({ msgcode: code }) : "",
@@ -1114,21 +1119,21 @@ function buildFormParams(frm, params) {
     let prms = params.split("&");
     for (let prm of prms) {
       let kary = prm.split("=");
-      let inp = (0, import_jquery3.default)('<input type="hidden" name="' + kary[0] + '"></input>');
+      let inp = jquery_util_default('<input type="hidden" name="' + kary[0] + '"></input>');
       inp.val(kary[1]);
       frm.append(inp);
     }
   } else if (Array.isArray(params)) {
     for (let prm of params) {
       if (prm.name) {
-        let inp = (0, import_jquery3.default)('<input type="hidden" name="' + prm.name + '"></input>');
+        let inp = jquery_util_default('<input type="hidden" name="' + prm.name + '"></input>');
         inp.val(prm.value);
         frm.append(inp);
       }
     }
   } else if (params) {
     for (let prm in params) {
-      let inp = (0, import_jquery3.default)('<input type="hidden" name="' + prm + '"></input>');
+      let inp = jquery_util_default('<input type="hidden" name="' + prm + '"></input>');
       inp.val(params[prm]);
       frm.append(inp);
     }
@@ -1138,13 +1143,13 @@ function submitWindow(settings) {
   let p = settings;
   if (p.url && p.url != "" && p.params) {
     let method = p.method || "POST";
-    let frm = (0, import_jquery3.default)("<form method='" + method + "'></form>");
+    let frm = jquery_util_default("<form method='" + method + "'></form>");
     frm.attr("action", p.url);
     frm.attr("target", p.windowName);
     buildFormParams(frm, p.params);
-    let layer = (0, import_jquery3.default)("<div class='open-new-window-submit-layer'></div>");
+    let layer = jquery_util_default("<div class='open-new-window-submit-layer'></div>");
     layer.append(frm);
-    (0, import_jquery3.default)("body").append(layer);
+    jquery_util_default("body").append(layer);
     frm.trigger("submit");
     setTimeout(function() {
       layer.remove();
@@ -1197,9 +1202,9 @@ function openNewWindow(settings) {
 }
 function startWaiting() {
   try {
-    let dc = (0, import_jquery3.default)(document.body);
+    let dc = jquery_util_default(document.body);
     let sh = dc.innerHeight();
-    let fslayer = (0, import_jquery3.default)("#fswaitlayer");
+    let fslayer = jquery_util_default("#fswaitlayer");
     let lh = fslayer.height();
     let fstop = mouseY;
     if (lh !== void 0 && sh !== void 0) {
@@ -1214,7 +1219,7 @@ function startWaiting() {
   }
 }
 function stopWaiting() {
-  (0, import_jquery3.default)("#fswaitlayer").hide();
+  jquery_util_default("#fswaitlayer").hide();
 }
 function submitFailure(xhr, status, errorThrown, checking = true) {
   stopWaiting();
@@ -1303,7 +1308,7 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
         ok: { label: fs_okbtn }
       }
     });
-    let dialog = (0, import_jquery3.default)(".bootbox > .modal-dialog");
+    let dialog = jquery_util_default(".bootbox > .modal-dialog");
     dialog.draggable();
     return;
   } catch (ex) {
@@ -1346,7 +1351,7 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
         cancel: { label: fs_cancelbtn }
       }
     });
-    let dialog = (0, import_jquery3.default)(".bootbox > .modal-dialog");
+    let dialog = jquery_util_default(".bootbox > .modal-dialog");
     dialog.draggable();
   } catch (ex) {
     console.error(ex);
@@ -1423,11 +1428,11 @@ var mouseX = 0;
 var mouseY = 0;
 function startApplication(pid, callback) {
   console.log("startApplication: pid=" + pid);
-  (0, import_jquery3.default)(document).on("mousedown", function(e) {
+  jquery_util_default(document).on("mousedown", function(e) {
     mouseX = e.pageX;
     mouseY = e.pageY;
   });
-  (0, import_jquery3.default)(globalThis).on("beforeunload", function(e) {
+  jquery_util_default(globalThis).on("beforeunload", function(e) {
     if (fs_winary.length > 0) {
       e.preventDefault();
       e.returnValue = "";
@@ -1436,7 +1441,7 @@ function startApplication(pid, callback) {
   }).on("unload", function() {
     closeChildWindows();
   });
-  let modal = import_jquery3.default?.fn?.modal;
+  let modal = jquery_util_default?.fn?.modal;
   if (!modal) modal = globalThis.jQuery?.fn?.modal;
   if (modal) {
     try {
@@ -1520,8 +1525,8 @@ function createLinkStyle(css_url) {
   }
 }
 function disableControls() {
-  (0, import_jquery3.default)(arguments).each(function(index, element) {
-    let $src = (0, import_jquery3.default)(element);
+  jquery_util_default(arguments).each(function(index, element) {
+    let $src = jquery_util_default(element);
     $src.attr("disabled", "true");
     setTimeout(function() {
       $src.removeAttr("disabled");
@@ -1557,7 +1562,6 @@ function randomize() {
 }
 
 // src/app/dh.ts
-var import_jquery4 = __toESM(require("jquery"));
 var import_crypto_js = __toESM(require("crypto-js"));
 var getPrimes = function(min, max) {
   const isPrime = new Array(max + 1).fill(true);
@@ -1678,7 +1682,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/dh";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    jquery_util_default.ajax({
       url: aurl,
       type: "POST",
       dataType: "json",
@@ -1706,7 +1710,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/dh";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    jquery_util_default.ajax({
       url: aurl,
       type: "POST",
       data: {
@@ -1729,7 +1733,7 @@ var DH = class {
     if (!aurl) aurl = getApiUrl() + "/api/crypto/update";
     let authtoken = this.getAccessorToken();
     let requestid = this.getRequestID();
-    import_jquery4.default.ajax({
+    jquery_util_default.ajax({
       url: aurl,
       type: "POST",
       data: {
@@ -2250,9 +2254,6 @@ function initAppConfig(callback) {
     console.error(ex);
   }
 }
-
-// src/app/ctrl.util.ts
-var import_jquery5 = __toESM(require("jquery"));
 
 // src/app/Utilities.ts
 var Utilities = class {
@@ -2786,7 +2787,7 @@ function getControlClasses(attrClass, ...classes) {
   return ctrlClasses;
 }
 function clearCalendar(src) {
-  let dpkr = (0, import_jquery5.default)(src);
+  let dpkr = jquery_util_default(src);
   if (dpkr.is(":disabled")) return;
   if (dpkr.is("[readonly]")) {
     let edit = dpkr.attr("editable");
@@ -2798,7 +2799,7 @@ function clearCalendar(src) {
   if (ifn) ifn("", dpkr);
 }
 function openCalendar(src) {
-  let dpkr = (0, import_jquery5.default)(src);
+  let dpkr = jquery_util_default(src);
   if (dpkr.is(":disabled")) return;
   if (dpkr.is("[readonly]")) {
     let edit = dpkr.attr("editable");
@@ -2820,7 +2821,7 @@ function openCalendar(src) {
       }
     });
     picker.datepicker("show");
-    (0, import_jquery5.default)(document).off("focusin");
+    jquery_util_default(document).off("focusin");
     return;
   } catch (ex) {
     console.error(ex);
@@ -3292,7 +3293,6 @@ var KnMask = class _KnMask {
 };
 
 // src/app/label.util.ts
-var import_jquery6 = __toESM(require("jquery"));
 function getLabel(name, defaultLabel, lang = getDefaultLanguage()) {
   let result = void 0;
   let default_labels2 = getDefaultLabels();
@@ -3399,7 +3399,7 @@ function loadAndMergeProgramLabel(id, callback, loadLabel = String(getMetaInfo()
 function fetchLabel(id, callback, url = getApiLabel()) {
   console.log("fetchLabel:", id);
   let authtoken = getAccessorToken();
-  import_jquery6.default.ajax({
+  jquery_util_default.ajax({
     url,
     type: "POST",
     data: JSON.stringify({ labelid: id }),
