@@ -206,10 +206,12 @@ __export(index_exports, {
 module.exports = __toCommonJS(index_exports);
 
 // src/app/jquery.util.ts
+var import_jquery = __toESM(require("jquery"));
 function getJQuery() {
   const jq = globalThis.jQuery || globalThis.$;
   if (!jq) {
-    throw new Error("jQuery not found. Please load jquery first.");
+    console.warn("jQuery not found. Please load jquery first.");
+    return import_jquery.default;
   }
   return jq;
 }

@@ -1,6 +1,6 @@
 {
   "name": "@willsofts/will-app5",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Program Utility Function",
   "main": "index.js",
   "module": "index.mjs",
@@ -45,12 +45,10 @@
   },
   "dependencies": {
     "assert": "^2.1.0",
-    "crypto-js": "^4.2.0",
-    "secure-ls": "^2.0.0"
-  },
-  "peerDependencies": {
     "bootbox": "^6.0.0",
     "bootstrap": "^5.1.3",
-    "jquery": "^3.7.1"
+    "crypto-js": "^4.2.0",
+    "jquery": "^3.7.1",
+    "secure-ls": "^2.0.0"
   }
 }
