@@ -1,4 +1,4 @@
-export const DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0 };
+export const DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0, orderBy: "", orderDir: "" };
 export class Paging {
     setting;
     constructor(setting = {}) {

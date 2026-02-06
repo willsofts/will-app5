@@ -3211,7 +3211,7 @@ function fetchLabel(id, callback, url = getApiLabel()) {
 }
 
 // src/app/Paging.ts
-var DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0 };
+var DEFAULT_PAGE_SETTINGS = { page: 1, rowsPerPage: 10, totalRows: 0, totalPages: 1, limit: 10, offset: 10, rows: 0, orderBy: "", orderDir: "" };
 var Paging = class {
   setting;
   constructor(setting = {}) {
