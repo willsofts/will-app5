@@ -94,12 +94,12 @@ export declare function serializeParameters(parameters?: any, addonParameters?: 
         authtoken: any;
         tokenkey: any;
         "data-type": string;
-        language: any;
+        language: string;
     };
 };
 export declare function decryptCipherData(headers: any, data: any): any;
 export declare function createLinkStyle(css_url?: string): void;
-export declare function disableControls(): void;
+export declare function disableControls(...elements: any[]): void;
 export declare function generateUUID(): string;
 export declare function getRequestID(): string;
 export declare function resetRequestID(): void;
@@ -127,6 +127,7 @@ export declare function formatDecimal(avalue: any, decimal: number, verifydecima
 export declare function ensureTableSetting(settings: any): any;
 export declare function formatDataTable(data: any, field: any): any;
 
+/* dh */
 export declare const getPrimeNumber: () => number;
 export declare class DH {
     prime: string;
@@ -151,6 +152,9 @@ export declare class DH {
     submitPublicKey(callback?: Function, aurl?: string): void;
     updatePublicKey(callback?: Function, aurl?: string): void;
 }
+
+/* jquery.util */
+export declare function getJQuery(): JQueryStatic;
 
 /* KnMask */
 export declare class KnMask {

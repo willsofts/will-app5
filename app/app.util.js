@@ -488,8 +488,8 @@ export function createLinkStyle(css_url) {
         }
     }
 }
-export function disableControls() {
-    $(arguments).each(function (index, element) {
+export function disableControls(...elements) {
+    $(elements).each(function (index, element) {
         let $src = $(element);
         $src.attr("disabled", "true");
         setTimeout(function () {

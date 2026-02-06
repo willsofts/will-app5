@@ -1319,8 +1319,8 @@ function createLinkStyle(css_url) {
     }
   }
 }
-function disableControls() {
-  jquery_util_default(arguments).each(function(index, element) {
+function disableControls(...elements) {
+  jquery_util_default(elements).each(function(index, element) {
     let $src = jquery_util_default(element);
     $src.attr("disabled", "true");
     setTimeout(function() {
@@ -3526,6 +3526,7 @@ export {
   getDefaultRawParameters,
   getDigits,
   getImgUrl,
+  getJQuery,
   getLabel,
   getLabelItem,
   getLabelModel,
