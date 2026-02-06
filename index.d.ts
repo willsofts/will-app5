@@ -38,7 +38,7 @@ export declare function setProgramMessage(message: Array<any>): void;
 export declare function setDefaultLabels(labels: Array<any>): void;
 export declare function setProgramLabels(labels: Array<any>): void;
 export declare function appInit(options?: any, callback?: Function): void;
-export declare function getMultiLanguagesModel(datas: any): any;
+export declare function getMultiLanguagesModel(datas?: any): any;
 export declare function assignAppConfig(data: any, callback?: Function): void;
 export declare function loadAppConfig(callback?: Function, url?: string): void;
 export declare function initConfigure(): void;
