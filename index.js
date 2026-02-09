@@ -1018,9 +1018,14 @@ function getMessageCode(errcode, params, defaultMessage) {
     let msg = null;
     let message_code = getStorage("message_code");
     if (message_code) {
-      msg = message_code.find((item) => {
-        return item.code == errcode;
-      });
+      try {
+        let message_codes = JSON.parse(message_code);
+        msg = message_codes.find((item) => {
+          return item.code == errcode;
+        });
+      } catch (ex) {
+        console.error(ex);
+      }
     }
     if (!msg) msg = program_message2.find((item) => {
       return item.code == errcode;
@@ -1064,7 +1069,7 @@ function loadAndMergeMessageCode(callback, loadMessageCode = String(getMetaInfo(
   }
   fetchMessageCode(void 0, function(success, data) {
     if (success) {
-      setStorage("message_code", data.body);
+      setStorage("message_code", JSON.stringify(data.body));
       if (callback) callback(success, data.body);
     }
   }, url);

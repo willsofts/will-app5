@@ -11,7 +11,13 @@ export function getMessageCode(errcode, params, defaultMessage) {
         //try find out from storage cached first
         let message_code = getStorage("message_code");
         if (message_code) {
-            msg = message_code.find((item) => { return item.code == errcode; });
+            try {
+                let message_codes = JSON.parse(message_code);
+                msg = message_codes.find((item) => { return item.code == errcode; });
+            }
+            catch (ex) {
+                console.error(ex);
+            }
         }
         if (!msg)
             msg = program_message.find((item) => { return item.code == errcode; });
@@ -58,7 +64,7 @@ export function loadAndMergeMessageCode(callback, loadMessageCode = String(getMe
     }
     fetchMessageCode(undefined, function (success, data) {
         if (success) {
-            setStorage("message_code", data.body);
+            setStorage("message_code", JSON.stringify(data.body));
             if (callback)
                 callback(success, data.body);
         }
