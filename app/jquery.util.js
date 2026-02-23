@@ -3,6 +3,8 @@ export function getJQuery() {
     const jq = globalThis.jQuery || globalThis.$;
     if (!jq) {
         console.warn("jQuery not found. Please load jquery first.");
+        window.$ = $;
+        window.jQuery = $;
         return $;
     }
     return jq;

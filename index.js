@@ -212,11 +212,16 @@ function getJQuery() {
   const jq = globalThis.jQuery || globalThis.$;
   if (!jq) {
     console.warn("jQuery not found. Please load jquery first.");
+    window.$ = import_jquery.default;
+    window.jQuery = import_jquery.default;
     return import_jquery.default;
   }
   return jq;
 }
 var jquery_util_default = getJQuery();
+
+// src/app/app.util.ts
+var import_sweetalert2 = __toESM(require("sweetalert2"));
 
 // src/bootbox/bootbox.ts
 var import_bootstrap = require("bootstrap");
@@ -1297,6 +1302,13 @@ function alertbox(errcode, callback, defaultmsg, params, addonmsg, title, icon) 
   }
 }
 function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
+  if (getMetaInfo().DIALOG_TYPE == "SWAL") {
+    alertDialogSweetAlert(msg, callbackfn, title, icon);
+  } else {
+    alertDialogBootBox(msg, callbackfn, title, icon);
+  }
+}
+function alertDialogBootBox(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
   if (!msg) {
     console.log("alertDialog: msg undefined");
     return;
@@ -1324,6 +1336,43 @@ function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas 
   }
   if (callbackfn) callbackfn();
 }
+function alertDialogSweetAlert(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
+  if (!msg) {
+    console.log("alertDialog: msg undefined");
+    return;
+  }
+  try {
+    let fs_okbtn = getMessageCode("fsokbtn", void 0, "OK");
+    import_sweetalert2.default.fire({
+      title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
+      text: msg,
+      draggable: true,
+      backdrop: true,
+      showCloseButton: true,
+      confirmButtonText: fs_okbtn,
+      allowOutsideClick: false,
+      //try to disable escape key: allowEscapeKey: false,
+      customClass: {
+        popup: "swal-custom-dialog-style",
+        title: "swal-custom-dialog-title"
+      },
+      didOpen: () => {
+        const container = document.querySelector(".swal2-container");
+        if (container) {
+          container.style.background = "transparent";
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (callbackfn) callbackfn();
+      }
+    });
+    return;
+  } catch (ex) {
+    console.error(ex);
+  }
+  if (callbackfn) callbackfn();
+}
 function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title, icon) {
   if (!title || title.trim().length == 0) title = getMessageCode("fsconfirm", void 0, "Confirmation");
   let txt = getMessageCode(errcode, params);
@@ -1338,6 +1387,13 @@ function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title
   }
 }
 function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
+  if (getMetaInfo().DIALOG_TYPE == "SWAL") {
+    return confirmDialogSweetAlert(msg, okCallback, cancelCallback, title, icon);
+  } else {
+    return confirmDialogBootBox(msg, okCallback, cancelCallback, title, icon);
+  }
+}
+function confirmDialogBootBox(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
   try {
     let fs_confirmbtn = getMessageCode("fsconfirmbtn", void 0, "OK");
     let fs_cancelbtn = getMessageCode("fscancelbtn", void 0, "Cancel");
@@ -1363,6 +1419,43 @@ function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", 
     dialog.draggable();
   } catch (ex) {
     console.error(ex);
+  }
+  return true;
+}
+function confirmDialogSweetAlert(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
+  try {
+    let fs_confirmbtn = getMessageCode("fsconfirmbtn", void 0, "OK");
+    let fs_cancelbtn = getMessageCode("fscancelbtn", void 0, "Cancel");
+    import_sweetalert2.default.fire({
+      title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
+      text: msg,
+      draggable: true,
+      backdrop: true,
+      showCloseButton: true,
+      showCancelButton: true,
+      confirmButtonText: fs_confirmbtn,
+      cancelButtonText: fs_cancelbtn,
+      allowOutsideClick: false,
+      //try to disabled escape key: allowEscapeKey: false,
+      customClass: {
+        popup: "swal-custom-dialog-style",
+        title: "swal-custom-dialog-title"
+      },
+      didOpen: () => {
+        const container = document.querySelector(".swal2-container");
+        if (container) {
+          container.style.background = "transparent";
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (okCallback) okCallback();
+      } else if (result.dismiss === import_sweetalert2.default.DismissReason.cancel) {
+        if (cancelCallback) cancelCallback();
+      }
+    });
+  } catch (ex) {
+    console.log(ex.description);
   }
   return true;
 }
@@ -1449,16 +1542,6 @@ function startApplication(pid, callback) {
   }).on("unload", function() {
     closeChildWindows();
   });
-  let modal = jquery_util_default?.fn?.modal;
-  if (!modal) modal = globalThis.jQuery?.fn?.modal;
-  if (modal) {
-    try {
-      modal.Constructor.Default.backdrop = "static";
-      modal.Constructor.Default.keyboard = false;
-    } catch (ex) {
-      console.error(ex);
-    }
-  }
   try {
     import_bootstrap2.Modal.Default.backdrop = "static";
     import_bootstrap2.Modal.Default.keyboard = false;
@@ -2838,28 +2921,34 @@ function openCalendar(src) {
 function triggerInput(input) {
   input.dispatchEvent(new Event("input", { bubbles: true }));
 }
-function inputNumberOnly(myfield, e, decimal, isPlus) {
-  let key;
-  if (e) key = e.which;
-  else return true;
-  let keychar = String.fromCodePoint(key);
-  let element = myfield;
-  isPlus = Boolean(isPlus);
-  let isPoint = decimal !== null && decimal !== void 0 && Number(decimal) !== 0;
-  if (key == 45 && !element.value.includes("-") && !isPlus) {
-    element.value = "-" + element.value;
-    triggerInput(element);
+function inputNumberOnly(element, event, decimal, isPlus) {
+  const key = event.key;
+  const value = element.value;
+  const allowDecimal = decimal !== null && decimal !== void 0 && Number(decimal) !== 0;
+  const allowMinus = !Boolean(isPlus);
+  if (key === "Backspace" || key === "Tab" || key === "Escape" || key === "Delete" || key === "ArrowLeft" || key === "ArrowRight" || key === "Home" || key === "End") {
+    return true;
   }
-  if (key == 46 && !element.value.includes(".") && isPoint) {
-    if (element.value == "") element.value = "0";
+  if (key === "-") {
+    if (!allowMinus) return false;
+    if (value.includes("-")) return false;
+    element.value = "-" + value.replace("-", "");
+    triggerInput(element);
+    return false;
+  }
+  if (key === ".") {
+    if (!allowDecimal) return false;
+    if (value.includes(".")) return false;
+    if (value === "" || value === "-") {
+      element.value += "0";
+    }
     triggerInput(element);
     return true;
   }
-  if (key == null || key == 0 || key == 8 || key == 9 || key == 27) return true;
-  else if ("0123456789".includes(keychar)) {
-    triggerInput(element);
+  if (/^[0-9]$/.test(key)) {
     return true;
-  } else return false;
+  }
+  return false;
 }
 function checkInputNumberOnly(myfield, e, decimal, isPlus) {
   let iskeyup = myfield.getAttribute("keyup");
@@ -2872,7 +2961,6 @@ function checkInputNumberOnly(myfield, e, decimal, isPlus) {
 function checkInputKey(myfield, event, decimal, maxvalue) {
   let iNum = event.keyCode;
   if (iNum >= 48 && iNum <= 57 || iNum >= 96 && iNum <= 105 || iNum == 109 || iNum == 110 || iNum == 189 || iNum == 190) {
-    myfield.setAttribute("keyup", true);
     let c_pos = getCaretPosition(myfield);
     let o_len = myfield.value.length;
     formatNumber(myfield, maxvalue, decimal);

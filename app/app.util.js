@@ -1,9 +1,10 @@
 import $ from "./jquery.util";
+import Swal from 'sweetalert2';
 import bootbox from "../bootbox/bootbox";
 import { Modal } from "bootstrap";
 import { getMessageCode } from "./msg.util";
 import { getAccessorToken, requestAccessorInfo, getDH, getAccessTokenKey } from "./messenger";
-import { getDefaultRawParameters, getDefaultLanguage } from "./app.info";
+import { getDefaultRawParameters, getDefaultLanguage, getMetaInfo } from "./app.info";
 const fs_winary = new Array();
 export function getWindowByName(winname) {
     if (!winname)
@@ -236,6 +237,14 @@ export function alertbox(errcode, callback, defaultmsg, params, addonmsg, title,
     }
 }
 export function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
+    if (getMetaInfo().DIALOG_TYPE == "SWAL") {
+        alertDialogSweetAlert(msg, callbackfn, title, icon);
+    }
+    else {
+        alertDialogBootBox(msg, callbackfn, title, icon);
+    }
+}
+export function alertDialogBootBox(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
     if (!msg) {
         console.log("alertDialog: msg undefined");
         return;
@@ -267,6 +276,46 @@ export function alertDialog(msg, callbackfn, title = "Alert", icon = "fa fa-bell
     if (callbackfn)
         callbackfn();
 }
+export function alertDialogSweetAlert(msg, callbackfn, title = "Alert", icon = "fa fa-bell-o fas fa-bell") {
+    if (!msg) {
+        console.log("alertDialog: msg undefined");
+        return;
+    }
+    try {
+        let fs_okbtn = getMessageCode("fsokbtn", undefined, "OK");
+        Swal.fire({
+            title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
+            text: msg,
+            draggable: true,
+            backdrop: true,
+            showCloseButton: true,
+            confirmButtonText: fs_okbtn,
+            allowOutsideClick: false,
+            //try to disable escape key: allowEscapeKey: false,
+            customClass: {
+                popup: "swal-custom-dialog-style",
+                title: "swal-custom-dialog-title",
+            },
+            didOpen: () => {
+                const container = document.querySelector('.swal2-container');
+                if (container) {
+                    container.style.background = 'transparent';
+                }
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (callbackfn)
+                    callbackfn();
+            }
+        });
+        return;
+    }
+    catch (ex) {
+        console.error(ex);
+    }
+    if (callbackfn)
+        callbackfn();
+}
 export function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg, title, icon) {
     if (!title || title.trim().length == 0)
         title = getMessageCode("fsconfirm", undefined, "Confirmation");
@@ -286,6 +335,14 @@ export function confirmbox(errcode, okFn, cancelFn, defaultmsg, params, addonmsg
     }
 }
 export function confirmDialog(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
+    if (getMetaInfo().DIALOG_TYPE == "SWAL") {
+        return confirmDialogSweetAlert(msg, okCallback, cancelCallback, title, icon);
+    }
+    else {
+        return confirmDialogBootBox(msg, okCallback, cancelCallback, title, icon);
+    }
+}
+export function confirmDialogBootBox(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
     try {
         let fs_confirmbtn = getMessageCode("fsconfirmbtn", undefined, "OK");
         let fs_cancelbtn = getMessageCode("fscancelbtn", undefined, "Cancel");
@@ -314,6 +371,47 @@ export function confirmDialog(msg, okCallback, cancelCallback, title = "Confirma
     }
     catch (ex) {
         console.error(ex);
+    }
+    return true;
+}
+export function confirmDialogSweetAlert(msg, okCallback, cancelCallback, title = "Confirmation", icon = "fas fa fa-question-circle") {
+    try {
+        let fs_confirmbtn = getMessageCode("fsconfirmbtn", undefined, "OK");
+        let fs_cancelbtn = getMessageCode("fscancelbtn", undefined, "Cancel");
+        Swal.fire({
+            title: "<em class='" + icon + "'></em>&nbsp;<label>" + title + "</label>",
+            text: msg,
+            draggable: true,
+            backdrop: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: fs_confirmbtn,
+            cancelButtonText: fs_cancelbtn,
+            allowOutsideClick: false,
+            //try to disabled escape key: allowEscapeKey: false,
+            customClass: {
+                popup: "swal-custom-dialog-style",
+                title: "swal-custom-dialog-title",
+            },
+            didOpen: () => {
+                const container = document.querySelector('.swal2-container');
+                if (container) {
+                    container.style.background = 'transparent';
+                }
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (okCallback)
+                    okCallback();
+            }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                if (cancelCallback)
+                    cancelCallback();
+            }
+        });
+    }
+    catch (ex) {
+        console.log(ex.description);
     }
     return true;
 }
@@ -396,19 +494,6 @@ export function startApplication(pid, callback) {
         }
     }).on("unload", function () { closeChildWindows(); });
     //disable bootstrap modal auto close when click outside and ESC key
-    let modal = $?.fn?.modal;
-    if (!modal)
-        modal = globalThis.jQuery?.fn?.modal;
-    if (modal) {
-        try {
-            //bootstrap v4
-            modal.Constructor.Default.backdrop = "static";
-            modal.Constructor.Default.keyboard = false;
-        }
-        catch (ex) {
-            console.error(ex);
-        }
-    }
     try {
         //bootstrap 5
         Modal.Default.backdrop = "static";

@@ -60,8 +60,12 @@ export declare function successbox(callback?: Function, params?: any): void;
 export declare function warningbox(errcode: string, callback?: Function, params?: any): void;
 export declare function alertbox(errcode: string, callback?: Function, defaultmsg?: string, params?: any, addonmsg?: string, title?: string, icon?: string): void;
 export declare function alertDialog(msg?: string, callbackfn?: Function, title?: string, icon?: string): void;
+export declare function alertDialogBootBox(msg?: string, callbackfn?: Function, title?: string, icon?: string): void;
+export declare function alertDialogSweetAlert(msg?: string, callbackfn?: Function, title?: string, icon?: string): void;
 export declare function confirmbox(errcode: string, okFn?: Function, cancelFn?: Function, defaultmsg?: string, params?: any, addonmsg?: string, title?: string, icon?: string): boolean;
 export declare function confirmDialog(msg?: string, okCallback?: Function, cancelCallback?: Function, title?: string, icon?: string): boolean;
+export declare function confirmDialogBootBox(msg?: string, okCallback?: Function, cancelCallback?: Function, title?: string, icon?: string): boolean;
+export declare function confirmDialogSweetAlert(msg?: string, okCallback?: Function, cancelCallback?: Function, title?: string, icon?: string): boolean;
 export declare function alertmsg(errcode: string, defaultmsg?: string, params?: any, callback?: Function): void;
 export declare function confirmmsg(errcode: string, defaultmsg?: string, params?: any, okFn?: Function, cancelFn?: Function): void;
 export declare function confirmDialogBox(errcode: string, params?: any, defaultmsg?: string, okFn?: Function, cancelFn?: Function, addonmsg?: string): boolean;
@@ -110,7 +114,7 @@ export declare function getControlClasses(attrClass: string, ...classes: string[
 export declare function clearCalendar(src: any): void;
 export declare function openCalendar(src: any): void;
 export declare function triggerInput(input: any): void;
-export declare function inputNumberOnly(myfield: any, e: any, decimal: number | string, isPlus?: boolean): boolean;
+export declare function inputNumberOnly(element: any, event: any, decimal?: number | string, isPlus?: boolean): boolean;
 export declare function checkInputNumberOnly(myfield: any, e: any, decimal: number | string, isPlus: boolean): boolean;
 export declare function checkInputKey(myfield: any, event: any, decimal: number | string, maxvalue: number | string): void;
 export declare function cleasingValues(element: any, valueBfChange: any, fraction: any, point: number, data: any): [any, boolean];
@@ -129,6 +133,7 @@ export declare function formatDataTable(data: any, field: any): any;
 
 /* dh */
 export declare const getPrimeNumber: () => number;
+export declare function modPowInt(base: bigint, exp: bigint, mod: bigint): bigint;
 export declare class DH {
     prime: string;
     generator: string;
@@ -286,10 +291,14 @@ export declare function loadAndMergeMessageCode(callback?: Function, loadMessage
 export declare function fetchMessageCode(code?: string, callback?: Function, url?: string): void;
 
 export declare const DEFAULT_PAGE_SETTINGS: PagingOffsetsInfo;
+export interface PagingSettings {
+    [key: string]: any;
+}
 export interface PagingNumberInfo {
     page: number;
     text: string;
-    css: string;
+    css?: string;
+    [key: string]: any;
 }
 export interface PagingOffsetsInfo {
     page: number;

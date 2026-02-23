@@ -61,34 +61,57 @@ export function openCalendar(src) {
 export function triggerInput(input) {
     input.dispatchEvent(new Event('input', { bubbles: true }));
 }
-export function inputNumberOnly(myfield, e, decimal, isPlus) {
-    let key;
-    if (e)
-        key = e.which;
-    else
-        return true;
-    let keychar = String.fromCodePoint(key);
-    let element = myfield;
-    isPlus = Boolean(isPlus);
-    let isPoint = decimal !== null && decimal !== undefined && Number(decimal) !== 0;
-    if (key == 45 && !element.value.includes('-') && !isPlus) {
-        element.value = "-" + element.value;
-        triggerInput(element);
-    }
-    if ((key == 46) && !element.value.includes('.') && isPoint) {
-        if (element.value == "")
-            element.value = '0';
-        triggerInput(element);
+export function inputNumberOnly(element, event, decimal, isPlus) {
+    const key = event.key;
+    const value = element.value;
+    const allowDecimal = decimal !== null && decimal !== undefined && Number(decimal) !== 0;
+    const allowMinus = !Boolean(isPlus);
+    // ----------------------
+    // Control keys (always allow)
+    // ----------------------
+    if (key === 'Backspace' ||
+        key === 'Tab' ||
+        key === 'Escape' ||
+        key === 'Delete' ||
+        key === 'ArrowLeft' ||
+        key === 'ArrowRight' ||
+        key === 'Home' ||
+        key === 'End') {
         return true;
     }
-    if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 27))
-        return true;
-    else if ("0123456789".includes(keychar)) {
+    // ----------------------
+    // Minus
+    // ----------------------
+    if (key === '-') {
+        if (!allowMinus)
+            return false;
+        if (value.includes('-'))
+            return false;
+        element.value = '-' + value.replace('-', '');
         triggerInput(element);
-        return true;
-    }
-    else
         return false;
+    }
+    // ----------------------
+    // Decimal
+    // ----------------------
+    if (key === '.') {
+        if (!allowDecimal)
+            return false;
+        if (value.includes('.'))
+            return false;
+        if (value === '' || value === '-') {
+            element.value += '0';
+        }
+        triggerInput(element);
+        return true;
+    }
+    // ----------------------
+    // Number
+    // ----------------------
+    if (/^[0-9]$/.test(key)) {
+        return true;
+    }
+    return false;
 }
 export function checkInputNumberOnly(myfield, e, decimal, isPlus) {
     let iskeyup = myfield.getAttribute('keyup');
@@ -101,7 +124,7 @@ export function checkInputNumberOnly(myfield, e, decimal, isPlus) {
 export function checkInputKey(myfield, event, decimal, maxvalue) {
     let iNum = event.keyCode;
     if (((iNum >= 48) && (iNum <= 57)) || ((iNum >= 96) && (iNum <= 105)) || iNum == 109 || iNum == 110 || iNum == 189 || iNum == 190) {
-        myfield.setAttribute('keyup', true);
+        //ignore: myfield.setAttribute('keyup',true);    
         let c_pos = getCaretPosition(myfield);
         let o_len = myfield.value.length;
         formatNumber(myfield, maxvalue, decimal);
