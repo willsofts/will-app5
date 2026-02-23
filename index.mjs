@@ -893,6 +893,7 @@ function fetchMessageCode(code, callback, url = getApiMessageCode()) {
 
 // src/app/app.util.ts
 var fs_winary = new Array();
+var drag_function;
 function getWindowByName(winname) {
   if (!winname) return null;
   for (let i = 0, isz = fs_winary.length; i < isz; i++) {
@@ -1121,7 +1122,8 @@ function alertDialogBootBox(msg, callbackfn, title = "Alert", icon = "fa fa-bell
       }
     });
     let dialog = jquery_util_default(".bootbox > .modal-dialog");
-    dialog.draggable();
+    if (drag_function) drag_function(dialog);
+    else dialog.draggable();
     return;
   } catch (ex) {
     console.error(ex);
@@ -1208,7 +1210,8 @@ function confirmDialogBootBox(msg, okCallback, cancelCallback, title = "Confirma
       }
     });
     let dialog = jquery_util_default(".bootbox > .modal-dialog");
-    dialog.draggable();
+    if (drag_function) drag_function(dialog);
+    else dialog.draggable();
   } catch (ex) {
     console.error(ex);
   }

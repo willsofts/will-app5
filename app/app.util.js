@@ -6,6 +6,10 @@ import { getMessageCode } from "./msg.util";
 import { getAccessorToken, requestAccessorInfo, getDH, getAccessTokenKey } from "./messenger";
 import { getDefaultRawParameters, getDefaultLanguage, getMetaInfo } from "./app.info";
 const fs_winary = new Array();
+let drag_function;
+export function setDragFunction(func) {
+    drag_function = func;
+}
 export function getWindowByName(winname) {
     if (!winname)
         return null;
@@ -267,7 +271,10 @@ export function alertDialogBootBox(msg, callbackfn, title = "Alert", icon = "fa 
             }
         });
         let dialog = $(".bootbox > .modal-dialog");
-        dialog.draggable();
+        if (drag_function)
+            drag_function(dialog);
+        else
+            dialog.draggable();
         return;
     }
     catch (ex) {
@@ -367,7 +374,10 @@ export function confirmDialogBootBox(msg, okCallback, cancelCallback, title = "C
             }
         });
         let dialog = $(".bootbox > .modal-dialog");
-        dialog.draggable();
+        if (drag_function)
+            drag_function(dialog);
+        else
+            dialog.draggable();
     }
     catch (ex) {
         console.error(ex);
