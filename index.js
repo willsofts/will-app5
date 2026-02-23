@@ -184,6 +184,7 @@ __export(index_exports, {
   setDefaultLabels: () => setDefaultLabels,
   setDefaultLanguage: () => setDefaultLanguage,
   setDefaultRawParameters: () => setDefaultRawParameters,
+  setDragFunction: () => setDragFunction,
   setImgUrl: () => setImgUrl,
   setMessagingCallback: () => setMessagingCallback,
   setMetaInfo: () => setMetaInfo,
@@ -1102,6 +1103,9 @@ function fetchMessageCode(code, callback, url = getApiMessageCode()) {
 // src/app/app.util.ts
 var fs_winary = new Array();
 var drag_function;
+function setDragFunction(func) {
+  drag_function = func;
+}
 function getWindowByName(winname) {
   if (!winname) return null;
   for (let i = 0, isz = fs_winary.length; i < isz; i++) {
@@ -3901,6 +3905,7 @@ function randomNumber(len = 6, alphabets = NUMERICS) {
   setDefaultLabels,
   setDefaultLanguage,
   setDefaultRawParameters,
+  setDragFunction,
   setImgUrl,
   setMessagingCallback,
   setMetaInfo,
