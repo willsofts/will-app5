@@ -37,12 +37,12 @@ export declare function getProgramLabels(): Array<any>;
 export declare function setProgramMessage(message: Array<any>): void;
 export declare function setDefaultLabels(labels: Array<any>): void;
 export declare function setProgramLabels(labels: Array<any>): void;
-export declare function appInit(options?: any, callback?: Function): void;
+export declare function appInit(options?: any, callback?: Function, draggable?: Function): void;
 export declare function getMultiLanguagesModel(datas?: any): any;
 export declare function assignAppConfig(data: any, callback?: Function): void;
 export declare function loadAppConfig(callback?: Function, url?: string): void;
 export declare function initConfigure(): void;
-export declare function initAppConfig(callback?: Function): void;
+export declare function initAppConfig(callback?: Function, draggable?: Function): void;
 
 /* app.util */
 export declare function setDragFunction(func?: Function): void;

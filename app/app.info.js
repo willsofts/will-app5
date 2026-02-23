@@ -1,5 +1,5 @@
 import { bindingChildMessaging, bindingParentMessaging } from "./messenger";
-import { createLinkStyle } from "./app.util";
+import { createLinkStyle, setDragFunction } from "./app.util";
 const env = (typeof import.meta !== "undefined" && import.meta.env) ??
     (typeof process !== "undefined" ? process.env : {});
 const appInfo = {
@@ -77,7 +77,8 @@ export function getProgramLabels() { return program_labels; }
 export function setProgramMessage(message) { program_message = message; }
 export function setDefaultLabels(labels) { default_labels = labels; }
 export function setProgramLabels(labels) { program_labels = labels; }
-export function appInit(options, callback) {
+export function appInit(options, callback, draggable) {
+    setDragFunction(draggable);
     const settings = options ?? { program_message, default_labels, program_labels, listen_messaging: 'child' };
     const setting = { listen_messaging: 'child', ...settings };
     setProgramMessage(setting.program_message);
@@ -150,7 +151,8 @@ export function initConfigure() {
     if (token)
         setTokenKey(token);
 }
-export function initAppConfig(callback) {
+export function initAppConfig(callback, draggable) {
+    setDragFunction(draggable);
     try {
         assignAppConfig(globalThis.getAppConfigs(), callback);
     }

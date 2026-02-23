@@ -2277,7 +2277,8 @@ function setDefaultLabels(labels) {
 function setProgramLabels(labels) {
   program_labels = labels;
 }
-function appInit(options, callback) {
+function appInit(options, callback, draggable) {
+  setDragFunction(draggable);
   const settings = options ?? { program_message, default_labels, program_labels, listen_messaging: "child" };
   const setting = { listen_messaging: "child", ...settings };
   setProgramMessage(setting.program_message);
@@ -2345,7 +2346,8 @@ function initConfigure() {
   if (!token || token.trim().length == 0) token = searchParams.get("tokenkey");
   if (token) setTokenKey(token);
 }
-function initAppConfig(callback) {
+function initAppConfig(callback, draggable) {
+  setDragFunction(draggable);
   try {
     assignAppConfig(globalThis.getAppConfigs(), callback);
   } catch (ex) {
