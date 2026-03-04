@@ -37,6 +37,7 @@ export declare function getProgramLabels(): Array<any>;
 export declare function setProgramMessage(message: Array<any>): void;
 export declare function setDefaultLabels(labels: Array<any>): void;
 export declare function setProgramLabels(labels: Array<any>): void;
+export declare function isDisplayPageHeader(): boolean;
 export declare function appInit(options?: any, callback?: Function, draggable?: Function): void;
 export declare function getMultiLanguagesModel(datas?: any): any;
 export declare function assignAppConfig(data: any, callback?: Function): void;

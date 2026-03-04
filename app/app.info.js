@@ -77,6 +77,7 @@ export function getProgramLabels() { return program_labels; }
 export function setProgramMessage(message) { program_message = message; }
 export function setDefaultLabels(labels) { default_labels = labels; }
 export function setProgramLabels(labels) { program_labels = labels; }
+export function isDisplayPageHeader() { return String(getMetaInfo()?.DISPLAY_PAGE_HEADER) != "false"; }
 export function appInit(options, callback, draggable) {
     setDragFunction(draggable);
     const settings = options ?? { program_message, default_labels, program_labels, listen_messaging: 'child' };

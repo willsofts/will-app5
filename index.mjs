@@ -2067,6 +2067,9 @@ function setDefaultLabels(labels) {
 function setProgramLabels(labels) {
   program_labels = labels;
 }
+function isDisplayPageHeader() {
+  return String(getMetaInfo()?.DISPLAY_PAGE_HEADER) != "false";
+}
 function appInit(options, callback, draggable) {
   setDragFunction(draggable);
   const settings = options ?? { program_message, default_labels, program_labels, listen_messaging: "child" };
@@ -3650,6 +3653,7 @@ export {
   initConfigure,
   inputNumberOnly,
   isDigit,
+  isDisplayPageHeader,
   isLetter,
   isLowerCase,
   isSecureStorage,
