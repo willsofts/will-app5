@@ -30,7 +30,7 @@ let notifyCallback;
 export function getConfig(key) { return appInfo[key]; }
 export function getAppInfo() { return appInfo; }
 export function registerNotification(callback) { notifyCallback = callback; }
-export function getMultiLanguages() { return appInfo.MULTI_LANGUAGES; }
+export function getMultiLanguages() { return appInfo.MULTI_LANGUAGES ?? []; }
 export function setMultiLanguages(values) {
     console.info("set MULTI_LANGUAGES", values);
     if (values)
@@ -44,14 +44,14 @@ export function setDefaultLanguage(language) {
     if (language && language.trim().length > 0)
         appInfo.DEFAULT_LANGUAGE = language;
 }
-export function getApiToken() { return appInfo.API_TOKEN; }
-export function getApiUrl() { return appInfo.API_URL; }
-export function getBaseUrl() { return appInfo.BASE_URL; }
-export function getCdnUrl() { return appInfo.CDN_URL; }
-export function getImgUrl() { return appInfo.IMG_URL; }
-export function getChatUrl() { return appInfo.CHAT_URL; }
-export function getBaseStorage() { return appInfo.BASE_STORAGE; }
-export function getDefaultRawParameters() { return appInfo.DEFAULT_RAW_PARAMETERS; }
+export function getApiToken() { return appInfo.API_TOKEN ?? ""; }
+export function getApiUrl() { return appInfo.API_URL ?? ""; }
+export function getBaseUrl() { return appInfo.BASE_URL ?? ""; }
+export function getCdnUrl() { return appInfo.CDN_URL ?? ""; }
+export function getImgUrl() { return appInfo.IMG_URL ?? ""; }
+export function getChatUrl() { return appInfo.CHAT_URL ?? ""; }
+export function getBaseStorage() { return appInfo.BASE_STORAGE ?? ""; }
+export function getDefaultRawParameters() { return String(appInfo.DEFAULT_RAW_PARAMETERS) == "true"; }
 export function setApiToken(value) { appInfo.API_TOKEN = value; }
 export function setApiUrl(value) { appInfo.API_URL = value; }
 export function setBaseUrl(value) { appInfo.BASE_URL = value; }
@@ -61,10 +61,10 @@ export function setChatUrl(value) { appInfo.CHAT_URL = value; }
 export function setBaseStorage(value) { appInfo.BASE_STORAGE = value; }
 export function setDefaultRawParameters(value) { appInfo.DEFAULT_RAW_PARAMETERS = value; }
 export function setSecureStorage(value) { appInfo.SECURE_STORAGE = value; }
-export function isSecureStorage() { return appInfo.SECURE_STORAGE; }
-export function getBaseCss() { return appInfo.BASE_CSS; }
+export function isSecureStorage() { return String(appInfo.SECURE_STORAGE) == "true"; }
+export function getBaseCss() { return appInfo.BASE_CSS ?? ""; }
 export function setBaseCss(value) { appInfo.BASE_CSS = value; }
-export function getTokenKey() { return appInfo.TOKEN_KEY; }
+export function getTokenKey() { return appInfo.TOKEN_KEY ?? ""; }
 export function setTokenKey(value) { appInfo.TOKEN_KEY = value; }
 export function getMetaInfo() { return appInfo.META_INFO; }
 export function setMetaInfo(value = {}) { appInfo.META_INFO = value; }

@@ -2171,7 +2171,7 @@ function registerNotification(callback) {
   notifyCallback = callback;
 }
 function getMultiLanguages() {
-  return appInfo.MULTI_LANGUAGES;
+  return appInfo.MULTI_LANGUAGES ?? [];
 }
 function setMultiLanguages(values) {
   console.info("set MULTI_LANGUAGES", values);
@@ -2186,28 +2186,28 @@ function setDefaultLanguage(language) {
   if (language && language.trim().length > 0) appInfo.DEFAULT_LANGUAGE = language;
 }
 function getApiToken() {
-  return appInfo.API_TOKEN;
+  return appInfo.API_TOKEN ?? "";
 }
 function getApiUrl() {
-  return appInfo.API_URL;
+  return appInfo.API_URL ?? "";
 }
 function getBaseUrl() {
-  return appInfo.BASE_URL;
+  return appInfo.BASE_URL ?? "";
 }
 function getCdnUrl() {
-  return appInfo.CDN_URL;
+  return appInfo.CDN_URL ?? "";
 }
 function getImgUrl() {
-  return appInfo.IMG_URL;
+  return appInfo.IMG_URL ?? "";
 }
 function getChatUrl() {
-  return appInfo.CHAT_URL;
+  return appInfo.CHAT_URL ?? "";
 }
 function getBaseStorage() {
-  return appInfo.BASE_STORAGE;
+  return appInfo.BASE_STORAGE ?? "";
 }
 function getDefaultRawParameters() {
-  return appInfo.DEFAULT_RAW_PARAMETERS;
+  return String(appInfo.DEFAULT_RAW_PARAMETERS) == "true";
 }
 function setApiToken(value) {
   appInfo.API_TOKEN = value;
@@ -2237,16 +2237,16 @@ function setSecureStorage(value) {
   appInfo.SECURE_STORAGE = value;
 }
 function isSecureStorage() {
-  return appInfo.SECURE_STORAGE;
+  return String(appInfo.SECURE_STORAGE) == "true";
 }
 function getBaseCss() {
-  return appInfo.BASE_CSS;
+  return appInfo.BASE_CSS ?? "";
 }
 function setBaseCss(value) {
   appInfo.BASE_CSS = value;
 }
 function getTokenKey() {
-  return appInfo.TOKEN_KEY;
+  return appInfo.TOKEN_KEY ?? "";
 }
 function setTokenKey(value) {
   appInfo.TOKEN_KEY = value;
