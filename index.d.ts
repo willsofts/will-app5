@@ -46,6 +46,7 @@ export declare function initConfigure(): void;
 export declare function initAppConfig(callback?: Function, draggable?: Function): void;
 
 /* app.util */
+export declare function getChildWindows(): any[];
 export declare function setDragFunction(func?: Function): void;
 export declare function getWindowOpen(win: any): any;
 export declare function getWindowByName(winname: string): any;

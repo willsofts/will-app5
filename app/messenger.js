@@ -1,5 +1,5 @@
 import { getApiUrl, getBaseUrl, getCdnUrl, getImgUrl, getDefaultLanguage, getApiToken, getBaseStorage, setApiUrl, setBaseUrl, setCdnUrl, setImgUrl, setDefaultLanguage, setApiToken, getDefaultRawParameters, setDefaultRawParameters, setBaseStorage, isSecureStorage, setSecureStorage, getBaseCss, setBaseCss, getChatUrl, setChatUrl, getMultiLanguages, setMultiLanguages, initConfigure, getTokenKey, setTokenKey, getMetaInfo, setMetaInfo } from "./app.info";
-import { createLinkStyle } from "./app.util";
+import { createLinkStyle, getChildWindows } from "./app.util";
 import { DH } from "./dh";
 import SecureLS from 'secure-ls';
 let messagingCallback;
@@ -97,18 +97,33 @@ export function sendMessageToFrame(data, win) {
     if (!data)
         return false;
     try {
-        console.log("sendMessageToFrame:", data);
+        console.log("sendMessageToFrame:", data, "window:", win);
         data.archetype = "willsofts";
+        const jsondata = JSON.stringify(data);
+        if (win == "*") {
+            win = null;
+            getChildWindows().forEach(w => {
+                console.log("sendMessageToFrame: post to windows: ", w);
+                try {
+                    w.postMessage(jsondata, ALLOWED_ORIGINS);
+                }
+                catch (ex) {
+                    console.warn(ex);
+                } // NOSONAR 
+            });
+        }
         if (win) {
-            win.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver
+            console.log("sendMessageToFrame: post to window", win);
+            win.postMessage(jsondata, ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver
         }
         else {
             let frames = document.getElementsByTagName('iframe');
             if (frames) {
                 for (let fr of frames) {
                     let awin = fr.contentWindow;
+                    console.log("sendMessageToFrame: post to frame", awin);
                     if (awin)
-                        awin.postMessage(JSON.stringify(data), ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver	
+                        awin.postMessage(jsondata, ALLOWED_ORIGINS); // NOSONAR - intentional broadcast, validated on receiver	
                 }
             }
         }

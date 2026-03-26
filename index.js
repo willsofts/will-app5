@@ -106,6 +106,7 @@ __export(index_exports, {
   getCaretPosition: () => getCaretPosition,
   getCdnUrl: () => getCdnUrl,
   getChatUrl: () => getChatUrl,
+  getChildWindows: () => getChildWindows,
   getConfig: () => getConfig,
   getControlClasses: () => getControlClasses,
   getCurrentWindow: () => getCurrentWindow,
@@ -1105,6 +1106,9 @@ function fetchMessageCode(code, callback, url = getApiMessageCode()) {
 // src/app/app.util.ts
 var fs_winary = new Array();
 var drag_function;
+function getChildWindows() {
+  return fs_winary;
+}
 function setDragFunction(func) {
   drag_function = func;
 }
@@ -1945,16 +1949,30 @@ var ALLOWED_ORIGINS = "*";
 function sendMessageToFrame(data, win) {
   if (!data) return false;
   try {
-    console.log("sendMessageToFrame:", data);
+    console.log("sendMessageToFrame:", data, "window:", win);
     data.archetype = "willsofts";
+    const jsondata = JSON.stringify(data);
+    if (win == "*") {
+      win = null;
+      getChildWindows().forEach((w) => {
+        console.log("sendMessageToFrame: post to windows: ", w);
+        try {
+          w.postMessage(jsondata, ALLOWED_ORIGINS);
+        } catch (ex) {
+          console.warn(ex);
+        }
+      });
+    }
     if (win) {
-      win.postMessage(JSON.stringify(data), ALLOWED_ORIGINS);
+      console.log("sendMessageToFrame: post to window", win);
+      win.postMessage(jsondata, ALLOWED_ORIGINS);
     } else {
       let frames = document.getElementsByTagName("iframe");
       if (frames) {
         for (let fr of frames) {
           let awin = fr.contentWindow;
-          if (awin) awin.postMessage(JSON.stringify(data), ALLOWED_ORIGINS);
+          console.log("sendMessageToFrame: post to frame", awin);
+          if (awin) awin.postMessage(jsondata, ALLOWED_ORIGINS);
         }
       }
     }
@@ -3829,6 +3847,7 @@ function randomNumber(len = 6, alphabets = NUMERICS) {
   getCaretPosition,
   getCdnUrl,
   getChatUrl,
+  getChildWindows,
   getConfig,
   getControlClasses,
   getCurrentWindow,

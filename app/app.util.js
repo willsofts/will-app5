@@ -5,8 +5,9 @@ import { Modal } from "bootstrap";
 import { getMessageCode } from "./msg.util";
 import { getAccessorToken, requestAccessorInfo, getDH, getAccessTokenKey } from "./messenger";
 import { getDefaultRawParameters, getDefaultLanguage, getMetaInfo } from "./app.info";
-const fs_winary = new Array();
+export const fs_winary = new Array();
 let drag_function;
+export function getChildWindows() { return fs_winary; }
 export function setDragFunction(func) {
     drag_function = func;
 }
