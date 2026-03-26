@@ -132,6 +132,7 @@ __export(index_exports, {
   getStorage: () => getStorage,
   getTokenKey: () => getTokenKey,
   getWindowByName: () => getWindowByName,
+  getWindowOpen: () => getWindowOpen,
   handleRequestMessage: () => handleRequestMessage,
   indexOfAlphabets: () => indexOfAlphabets,
   initAppConfig: () => initAppConfig,
@@ -1107,23 +1108,17 @@ var drag_function;
 function setDragFunction(func) {
   drag_function = func;
 }
+function getWindowOpen(win) {
+  return fs_winary.find((w) => win == w);
+}
 function getWindowByName(winname) {
   if (!winname) return null;
-  for (let i = 0, isz = fs_winary.length; i < isz; i++) {
-    try {
-      if (fs_winary[i]) {
-        if (fs_winary[i].name == winname) return fs_winary[i];
-      }
-    } catch (ex) {
-      console.error(ex);
-    }
-  }
-  return null;
+  return fs_winary.find((w) => winname == w.name);
 }
 function closeChildWindows() {
-  for (let i = 0, isz = fs_winary.length; i < isz; i++) {
+  for (let win of fs_winary) {
     try {
-      if (fs_winary[i]) fs_winary[i].close();
+      if (win) win.close();
     } catch (ex) {
       console.error(ex);
     }
@@ -1131,7 +1126,7 @@ function closeChildWindows() {
 }
 function addWindow(awindow) {
   if (!awindow) return;
-  fs_winary.push(awindow);
+  fs_winary.unshift(awindow);
 }
 function buildFormParams(frm, params) {
   if (typeof params === "string") {
@@ -1189,10 +1184,11 @@ function openNewWindow(settings) {
   };
   let p = { ...defaultSettings, ...settings };
   try {
-    let fswin = getWindowByName(p.winName);
+    let fswin = getWindowByName(p.windowName);
     if (fswin) {
+      console.log("openNewWindow: found", fswin);
       fswin.focus();
-      return;
+      return fswin;
     }
   } catch (ex) {
     console.error(ex);
@@ -3859,6 +3855,7 @@ function randomNumber(len = 6, alphabets = NUMERICS) {
   getStorage,
   getTokenKey,
   getWindowByName,
+  getWindowOpen,
   handleRequestMessage,
   indexOfAlphabets,
   initAppConfig,

@@ -10,27 +10,19 @@ let drag_function;
 export function setDragFunction(func) {
     drag_function = func;
 }
+export function getWindowOpen(win) {
+    return fs_winary.find(w => win == w);
+}
 export function getWindowByName(winname) {
     if (!winname)
         return null;
-    for (let i = 0, isz = fs_winary.length; i < isz; i++) {
-        try {
-            if (fs_winary[i]) {
-                if (fs_winary[i].name == winname)
-                    return fs_winary[i];
-            }
-        }
-        catch (ex) {
-            console.error(ex);
-        }
-    }
-    return null;
+    return fs_winary.find(w => winname == w.name);
 }
 export function closeChildWindows() {
-    for (let i = 0, isz = fs_winary.length; i < isz; i++) {
+    for (let win of fs_winary) {
         try {
-            if (fs_winary[i])
-                fs_winary[i].close();
+            if (win)
+                win.close();
         }
         catch (ex) {
             console.error(ex);
@@ -40,7 +32,7 @@ export function closeChildWindows() {
 export function addWindow(awindow) {
     if (!awindow)
         return;
-    fs_winary.push(awindow);
+    fs_winary.unshift(awindow); //add at the begining of array
 }
 export function buildFormParams(frm, params) {
     if (typeof (params) === "string") {
@@ -98,10 +90,11 @@ export function openNewWindow(settings) {
     };
     let p = { ...defaultSettings, ...settings };
     try {
-        let fswin = getWindowByName(p.winName);
+        let fswin = getWindowByName(p.windowName);
         if (fswin) {
+            console.log("openNewWindow: found", fswin);
             fswin.focus();
-            return;
+            return fswin;
         }
     }
     catch (ex) {
