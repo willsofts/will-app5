@@ -222,3 +222,6 @@ This is masking utility function.
 | maskTail | to mask text tailer | ex. <br/>maskTail("1234567898765432", 4) result will be "1234************" |
 | maskHeadAndTail | to mask header and tailer | ex. <br/>maskHeadAndTail("1234567898765432", 4) result will be "1234********5432" |
 
+---
+### Classes Usage
+See more detail [will-app5](./will-app5.md)
